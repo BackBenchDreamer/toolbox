@@ -22,8 +22,8 @@ app.use('/api/v1/utilities', utilitiesRouter);
 app.use('/api/v1/developer', developerRouter);
 app.use('/api/v1/registry', registryRouter);
 
-// OpenAPI spec — generated from the tool registry
-app.use('/api', openApiRouter);
+// OpenAPI spec — versioned alongside the endpoints it documents
+app.use('/api/v1', openApiRouter);
 
 // 404 handler
 app.use((_req, res) => {
@@ -35,7 +35,7 @@ const PORT = process.env['PORT'] ? parseInt(process.env['PORT'], 10) : 3001;
 if (process.env['NODE_ENV'] !== 'test') {
   app.listen(PORT, '127.0.0.1', () => {
     console.warn(`Toolbox API v1 running on http://127.0.0.1:${PORT}`);
-    console.warn(`OpenAPI spec:      http://127.0.0.1:${PORT}/api/openapi.json`);
+    console.warn(`OpenAPI spec:      http://127.0.0.1:${PORT}/api/v1/openapi.json`);
   });
 }
 
