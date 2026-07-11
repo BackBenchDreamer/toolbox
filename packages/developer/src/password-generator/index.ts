@@ -1,5 +1,6 @@
 import { ok, err, ErrorCode } from '@toolbox/shared';
 import type { Result, Capability } from '@toolbox/shared';
+import type { randomFillSync as RandomFillSyncFn } from 'crypto';
 import { PasswordInputSchema } from './schema.js';
 import type { PasswordInput, PasswordOutput } from './schema.js';
 import manifest from './manifest.js';
@@ -57,7 +58,7 @@ function buildPassword(charset: string, length: number): string {
   } else {
     // Node.js fallback
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { randomFillSync } = require('crypto') as typeof import('crypto');
+    const { randomFillSync } = require('crypto') as { randomFillSync: typeof RandomFillSyncFn };
     randomFillSync(arr);
   }
   return Array.from(arr, (n) => charset[n % charset.length]).join('');

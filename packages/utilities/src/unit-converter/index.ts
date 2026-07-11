@@ -27,7 +27,6 @@ export function convertUnit(input: UnitConverterInput): Result<UnitConverterOutp
   const fromDef = UNIT_MAP.get(from);
   const toDef = UNIT_MAP.get(to);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (!fromDef || !toDef) {
     return err({ code: ErrorCode.UNSUPPORTED_UNIT, message: `Unknown unit: ${!fromDef ? from : to}` });
   }
