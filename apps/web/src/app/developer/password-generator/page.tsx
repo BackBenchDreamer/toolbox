@@ -81,7 +81,7 @@ export default function PasswordGeneratorPage() {
         {error && <p className="error-message" role="alert">{error}</p>}
 
         {result && (
-          <div className="result-box">
+          <div className="result-box" role="region" aria-live="polite" aria-label="Generated passwords">
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--muted)' }}>
               <span>Entropy: {result.entropy} bits</span>
               <span style={{ color: strengthColors[result.strength] ?? 'inherit', fontWeight: 600 }}>

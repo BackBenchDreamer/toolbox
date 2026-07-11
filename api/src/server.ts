@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { financeRouter } from './routes/finance.js';
 import { utilitiesRouter } from './routes/utilities.js';
 import { developerRouter } from './routes/developer.js';
@@ -10,6 +11,19 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Rate limiting — 100 requests per minute per IP on compute endpoints.
+// Excludes /health and the OpenAPI spec (read-only, cacheable).
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: { code: 'RATE_LIMITED', message: 'Too many requests, please try again later.' } },
+});
+app.use('/api/v1/finance', apiLimiter);
+app.use('/api/v1/utilities', apiLimiter);
+app.use('/api/v1/developer', apiLimiter);
 
 // Health check
 app.get('/health', (_req, res) => {
@@ -31,11 +45,14 @@ app.use((_req, res) => {
 });
 
 const PORT = process.env['PORT'] ? parseInt(process.env['PORT'], 10) : 3001;
+// Bind to all interfaces in production (Railway/Fly/Render require 0.0.0.0).
+// Keep localhost-only in development to avoid accidental LAN exposure.
+const HOST = process.env['NODE_ENV'] === 'production' ? '0.0.0.0' : '127.0.0.1';
 
 if (process.env['NODE_ENV'] !== 'test') {
-  app.listen(PORT, '127.0.0.1', () => {
-    console.warn(`Toolbox API v1 running on http://127.0.0.1:${PORT}`);
-    console.warn(`OpenAPI spec:      http://127.0.0.1:${PORT}/api/v1/openapi.json`);
+  app.listen(PORT, HOST, () => {
+    console.warn(`Toolbox API v1 running on http://${HOST}:${PORT}`);
+    console.warn(`OpenAPI spec:      http://${HOST}:${PORT}/api/v1/openapi.json`);
   });
 }
 

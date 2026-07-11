@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { ALL_TOOLS, searchTools } from '@toolbox/registry';
+import { getPublicTools, searchTools } from '@toolbox/registry';
 import type { ToolManifest } from '@toolbox/registry';
 import { registerFinanceCommands } from './commands/finance.js';
 import { registerUtilCommands } from './commands/utils.js';
@@ -18,7 +18,9 @@ program
   .description('List all available tools')
   .option('-c, --category <cat>', 'Filter by category')
   .action((opts) => {
-    const tools = opts.category ? ALL_TOOLS.filter((t) => t.category === opts.category) : ALL_TOOLS;
+    const tools = opts.category
+      ? getPublicTools().filter((t) => t.category === opts.category)
+      : getPublicTools();
     console.warn(chalk.bold('\nAvailable Tools:\n'));
     const byCategory = new Map<string, ToolManifest[]>();
     for (const t of tools) {

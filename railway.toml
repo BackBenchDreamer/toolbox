@@ -1,0 +1,21 @@
+# Railway deployment configuration for the Toolbox API.
+# Placed at the repo root so Railway can auto-detect the monorepo layout.
+# The API is the only service that runs on Railway; the web app ships on Vercel.
+
+[build]
+# Install all workspace dependencies, then build only the api workspace.
+builder = "nixpacks"
+buildCommand = "npm ci && npm run build --workspace=api"
+
+[deploy]
+# Railway injects $PORT at runtime; the API reads it from process.env.PORT.
+# NODE_ENV=production triggers 0.0.0.0 binding in api/src/server.ts.
+startCommand = "node api/dist/server.js"
+restartPolicyType = "on-failure"
+restartPolicyMaxRetries = 3
+
+[[services]]
+name = "toolbox-api"
+
+[services.variables]
+NODE_ENV = "production"

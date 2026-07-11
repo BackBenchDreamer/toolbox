@@ -46,7 +46,7 @@ export default function SIPCalculatorPage() {
       </form>
 
       {result && (
-        <div className="result-box" role="region" aria-label="SIP results">
+        <div className="result-box" role="region" aria-live="polite" aria-label="SIP results">
           {([
             ['Future Value', formatCurrency(result.futureValue)],
             ['Total Invested', formatCurrency(result.totalInvested)],
