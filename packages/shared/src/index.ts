@@ -9,6 +9,7 @@ export type {
   ToolInterfaces,
   FieldDef,
   ToolManifest,
+  Capability,
   PaginationMeta,
   ApiResponse,
 } from './types/index.js';
