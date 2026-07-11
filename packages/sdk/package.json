@@ -1,0 +1,37 @@
+{
+  "name": "@toolbox/sdk",
+  "version": "0.1.0",
+  "description": "Unified SDK — single import for all toolbox capabilities",
+  "keywords": ["toolbox", "sdk", "calculators", "finance", "utilities", "developer"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "vitest run --config vitest.config.ts",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "vitest": "^3.2.7",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@toolbox/shared": "*",
+    "@toolbox/finance": "*",
+    "@toolbox/utilities": "*",
+    "@toolbox/developer": "*",
+    "@toolbox/registry": "*"
+  }
+}
