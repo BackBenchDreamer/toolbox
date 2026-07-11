@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   ALL_TOOLS,
   CAPABILITIES,
+  registry,
   getToolById,
   getToolBySlug,
   getToolsByCategory,
@@ -188,6 +189,80 @@ describe('Capability registry', () => {
       const input = sampleInputs[id] ?? {};
       const result = await cap.execute(input);
       expect(typeof result.success).toBe('boolean');
+    }
+  });
+});
+
+describe('registry object (dynamic dispatch)', () => {
+  it('registry.list() returns all registered tool ids', () => {
+    const ids = registry.list();
+    expect(ids.length).toBe(ALL_TOOLS.length);
+    ALL_TOOLS.forEach((t) => expect(ids).toContain(t.id));
+  });
+
+  it('registry.has() returns true for known ids', () => {
+    expect(registry.has('loan-calculator')).toBe(true);
+    expect(registry.has('uuid-generator')).toBe(true);
+  });
+
+  it('registry.has() returns false for unknown ids', () => {
+    expect(registry.has('does-not-exist')).toBe(false);
+  });
+
+  it('registry.manifest() returns the correct manifest', () => {
+    const m = registry.manifest('gst-calculator');
+    expect(m).toBeDefined();
+    expect(m?.id).toBe('gst-calculator');
+  });
+
+  it('registry.manifest() returns undefined for unknown id', () => {
+    expect(registry.manifest('does-not-exist')).toBeUndefined();
+  });
+
+  it('registry.execute() dispatches to the correct tool', async () => {
+    const result = await registry.execute('emi-calculator', {
+      principal: 800000,
+      annualRatePercent: 9,
+      tenureMonths: 60,
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toHaveProperty('emi');
+    }
+  });
+
+  it('registry.execute() returns a NOT_FOUND error for unknown id', async () => {
+    const result = await registry.execute('does-not-exist', {});
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.code).toBe('NOT_FOUND');
+      expect(result.error.message).toContain('does-not-exist');
+    }
+  });
+
+  it('registry.execute() returns VALIDATION_ERROR for invalid input', async () => {
+    const result = await registry.execute('loan-calculator', { principal: -1 });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.code).toBe('VALIDATION_ERROR');
+    }
+  });
+
+  it('registry.execute() works for all 8 registered tools', async () => {
+    const inputs: Record<string, Record<string, unknown>> = {
+      'loan-calculator': { principal: 100000, annualRatePercent: 8, tenureMonths: 12 },
+      'emi-calculator': { principal: 100000, annualRatePercent: 8, tenureMonths: 12 },
+      'sip-calculator': { monthlyInvestment: 5000, annualRatePercent: 12, tenureMonths: 12 },
+      'compound-interest': { principal: 100000, annualRatePercent: 8, years: 1, compoundingsPerYear: 12 },
+      'gst-calculator': { amount: 1000, gstPercent: 18, mode: 'exclusive' },
+      'unit-converter': { value: 1, from: 'km', to: 'mi' },
+      'password-generator': { length: 8, includeLowercase: true, includeUppercase: false, includeNumbers: false, includeSymbols: false, excludeAmbiguous: false, count: 1 },
+      'uuid-generator': { count: 1, version: 'v4', uppercase: false },
+    };
+    for (const id of registry.list()) {
+      const input = inputs[id] ?? {};
+      const result = await registry.execute(id, input);
+      expect(result.success, `${id} should succeed`).toBe(true);
     }
   });
 });

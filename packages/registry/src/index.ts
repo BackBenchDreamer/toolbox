@@ -34,6 +34,56 @@ export function getCapability(id: string): Capability | undefined {
 }
 
 /**
+ * Execute a tool by its registry id — the primary dynamic dispatch entry point.
+ *
+ * This is the preferred interface for CLI, MCP, AI agents, and any consumer
+ * that resolves tools at runtime rather than import-time.
+ *
+ * ```ts
+ * // Instead of:
+ * import { LoanCalculator } from '@toolbox/finance';
+ * await LoanCalculator.execute(input);
+ *
+ * // Use:
+ * import { registry } from '@toolbox/registry';
+ * await registry.execute('loan-calculator', input);
+ * ```
+ *
+ * Returns a failed Result if the tool id is not registered.
+ */
+export const registry = {
+  /** Execute a registered tool by id. */
+  execute(id: string, input: unknown): ReturnType<Capability['execute']> {
+    const cap = CAPABILITIES.get(id);
+    if (!cap) {
+      return Promise.resolve({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: `No tool registered with id "${id}". Check registry.list() for available ids.`,
+        },
+      });
+    }
+    return cap.execute(input);
+  },
+
+  /** Check whether a tool id is registered. */
+  has(id: string): boolean {
+    return CAPABILITIES.has(id);
+  },
+
+  /** Return all registered tool ids. */
+  list(): string[] {
+    return [...CAPABILITIES.keys()];
+  },
+
+  /** Return the manifest for a tool id, or undefined. */
+  manifest(id: string): ToolManifest | undefined {
+    return CAPABILITIES.get(id)?.manifest;
+  },
+} as const;
+
+/**
  * Master registry — single source of truth for all capabilities.
  *
  * Dependency rule: entries must always point inward.
