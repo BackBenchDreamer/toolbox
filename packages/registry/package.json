@@ -13,6 +13,7 @@
     }
   },
   "scripts": {
+    "prebuild": "node ../../scripts/generate-registry.mjs --check",
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "test": "vitest run --config vitest.config.ts",

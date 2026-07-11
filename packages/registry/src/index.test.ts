@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   ALL_TOOLS,
+  CAPABILITIES,
   getToolById,
   getToolBySlug,
   getToolsByCategory,
@@ -11,6 +12,7 @@ import {
   getToolsGroupedByCategory,
   getRelatedTools,
   getToolsByInterface,
+  getCapability,
 } from './index.js';
 
 describe('Tool Registry', () => {
@@ -138,5 +140,54 @@ describe('Tool Registry', () => {
 
   it('no tool has requiresAuth: true (all are open by default)', () => {
     ALL_TOOLS.forEach((t) => expect(t.requiresAuth).toBe(false));
+  });
+
+  it('no tool manifest contains estimatedMs', () => {
+    ALL_TOOLS.forEach((t) => {
+      expect((t as Record<string, unknown>)['estimatedMs']).toBeUndefined();
+    });
+  });
+});
+
+describe('Capability registry', () => {
+  it('CAPABILITIES map has an entry for every tool in ALL_TOOLS', () => {
+    expect(CAPABILITIES.size).toBe(ALL_TOOLS.length);
+    ALL_TOOLS.forEach((t) => expect(CAPABILITIES.has(t.id)).toBe(true));
+  });
+
+  it('each Capability carries the correct manifest', () => {
+    for (const [id, cap] of CAPABILITIES) {
+      expect(cap.manifest.id).toBe(id);
+    }
+  });
+
+  it('getCapability returns the capability for a known id', () => {
+    const cap = getCapability('loan-calculator');
+    expect(cap).toBeDefined();
+    expect(cap?.manifest.name).toBe('Loan Calculator');
+  });
+
+  it('getCapability returns undefined for an unknown id', () => {
+    expect(getCapability('does-not-exist')).toBeUndefined();
+  });
+
+  it('every Capability.execute() returns a Promise<Result>', async () => {
+    // smoke-test every tool with its first example input (if present)
+    const sampleInputs: Record<string, Record<string, unknown>> = {
+      'loan-calculator': { principal: 500000, annualRatePercent: 8.5, tenureMonths: 240 },
+      'emi-calculator': { principal: 800000, annualRatePercent: 9, tenureMonths: 60 },
+      'sip-calculator': { monthlyInvestment: 10000, annualRatePercent: 12, tenureMonths: 120 },
+      'compound-interest': { principal: 100000, annualRatePercent: 8, years: 5, compoundingsPerYear: 12 },
+      'gst-calculator': { amount: 10000, gstPercent: 18, mode: 'exclusive' },
+      'unit-converter': { value: 100, from: 'km', to: 'mi' },
+      'password-generator': { length: 12, includeLowercase: true, includeUppercase: true, includeNumbers: true, includeSymbols: false, excludeAmbiguous: false, count: 1 },
+      'uuid-generator': { count: 1, version: 'v4', uppercase: false },
+    };
+
+    for (const [id, cap] of CAPABILITIES) {
+      const input = sampleInputs[id] ?? {};
+      const result = await cap.execute(input);
+      expect(typeof result.success).toBe('boolean');
+    }
   });
 });

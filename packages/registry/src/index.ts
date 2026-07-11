@@ -1,15 +1,37 @@
-import type { ToolManifest, ToolCategory } from '@toolbox/shared';
+import type { ToolManifest, ToolCategory, Capability } from '@toolbox/shared';
 import {
   loanCalculatorManifest,
   emiCalculatorManifest,
   sipCalculatorManifest,
   compoundInterestManifest,
   gstCalculatorManifest,
+  LoanCalculator,
+  EMICalculator,
+  SIPCalculator,
+  CompoundInterestCalculator,
+  GSTCalculator,
 } from '@toolbox/finance';
-import { unitConverterManifest } from '@toolbox/utilities';
-import { passwordGeneratorManifest, uuidGeneratorManifest } from '@toolbox/developer';
+import { unitConverterManifest, UnitConverter } from '@toolbox/utilities';
+import { passwordGeneratorManifest, uuidGeneratorManifest, PasswordGenerator, UUIDGenerator } from '@toolbox/developer';
 
-export type { ToolManifest, ToolCategory };
+export type { ToolManifest, ToolCategory, Capability };
+
+/** All registered Capability objects, keyed by tool id. */
+export const CAPABILITIES: ReadonlyMap<string, Capability> = new Map<string, Capability>([
+  [LoanCalculator.manifest.id, LoanCalculator as Capability],
+  [EMICalculator.manifest.id, EMICalculator as Capability],
+  [SIPCalculator.manifest.id, SIPCalculator as Capability],
+  [CompoundInterestCalculator.manifest.id, CompoundInterestCalculator as Capability],
+  [GSTCalculator.manifest.id, GSTCalculator as Capability],
+  [UnitConverter.manifest.id, UnitConverter as Capability],
+  [PasswordGenerator.manifest.id, PasswordGenerator as Capability],
+  [UUIDGenerator.manifest.id, UUIDGenerator as Capability],
+]);
+
+/** Lookup a Capability by its tool id. Returns undefined if not registered. */
+export function getCapability(id: string): Capability | undefined {
+  return CAPABILITIES.get(id);
+}
 
 /**
  * Master registry — single source of truth for all capabilities.
