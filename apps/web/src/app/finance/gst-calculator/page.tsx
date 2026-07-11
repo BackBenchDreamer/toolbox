@@ -51,7 +51,7 @@ export default function GSTCalculatorPage() {
       </form>
 
       {result && (
-        <div className="result-box" role="region" aria-label="GST results">
+        <div className="result-box" role="region" aria-live="polite" aria-label="GST results">
           {([
             ['Base Amount', formatCurrency(result.baseAmount)],
             ['GST Amount', formatCurrency(result.gstAmount)],

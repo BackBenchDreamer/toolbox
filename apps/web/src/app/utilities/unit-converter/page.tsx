@@ -79,7 +79,7 @@ export default function UnitConverterPage() {
 
         {error && <p className="error-message" role="alert">{error}</p>}
         {result && (
-          <div className="result-box">
+          <div className="result-box" role="region" aria-live="polite" aria-label="Conversion result">
             <p style={{ margin: 0, fontFamily: 'var(--mono)', fontSize: '1rem' }}>{result}</p>
           </div>
         )}

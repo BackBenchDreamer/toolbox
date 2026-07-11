@@ -38,7 +38,7 @@ export default function LoanCalculatorPage() {
       </form>
 
       {result && (
-        <div className="result-box" role="region" aria-label="Loan calculation results">
+        <div className="result-box" role="region" aria-live="polite" aria-label="Loan calculation results">
           <ResultRow label="Monthly EMI" value={formatCurrency(result.emi)} />
           <ResultRow label="Total Payment" value={formatCurrency(result.totalPayment)} />
           <ResultRow label="Total Interest" value={formatCurrency(result.totalInterest)} />

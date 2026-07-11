@@ -2,12 +2,12 @@ name: Registry Validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "packages/**/manifest.ts"
       - "scripts/generate-registry.mjs"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "packages/**/manifest.ts"
       - "scripts/generate-registry.mjs"

@@ -17,8 +17,9 @@ import {
 } from './index.js';
 
 describe('Tool Registry', () => {
-  it('contains all 8 initial tools', () => {
-    expect(ALL_TOOLS.length).toBe(8);
+  it('contains at least 8 tools', () => {
+    // Use >= so this test does not break when new tools are added via TOOL_ENTRIES.
+    expect(ALL_TOOLS.length).toBeGreaterThanOrEqual(8);
   });
 
   it('each tool has required manifest fields', () => {
