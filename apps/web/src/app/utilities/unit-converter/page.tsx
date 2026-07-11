@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { convertUnit, UNITS } from '@toolbox/utilities';
 import type { UnitCategory } from '@toolbox/utilities';
 import { ToolLayout } from '@/components/ToolLayout';
-import unitConverterManifest from '@toolbox/utilities/unit-converter';
+import { unitConverterManifest } from '@toolbox/utilities';
 
 const CATEGORIES = [...new Set(UNITS.map((u) => u.category))] as UnitCategory[];
 

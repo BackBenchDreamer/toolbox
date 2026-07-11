@@ -5,7 +5,7 @@ import { calculateEMI } from '@toolbox/finance';
 import { formatCurrency } from '@toolbox/shared';
 import type { EMIOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
-import emiManifest from '@toolbox/finance/emi-calculator';
+import { emiCalculatorManifest as emiManifest } from '@toolbox/finance';
 
 export default function EMICalculatorPage() {
   const [result, setResult] = useState<EMIOutput | null>(null);

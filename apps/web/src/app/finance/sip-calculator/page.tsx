@@ -5,7 +5,7 @@ import { calculateSIP } from '@toolbox/finance';
 import { formatCurrency, formatNumber } from '@toolbox/shared';
 import type { SIPOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
-import sipManifest from '@toolbox/finance/sip-calculator';
+import { sipCalculatorManifest as sipManifest } from '@toolbox/finance';
 
 export default function SIPCalculatorPage() {
   const [result, setResult] = useState<SIPOutput | null>(null);

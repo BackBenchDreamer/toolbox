@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { generateUUID } from '@toolbox/developer';
 import type { UUIDOutput } from '@toolbox/developer';
 import { ToolLayout } from '@/components/ToolLayout';
-import uuidManifest from '@toolbox/developer/uuid-generator';
+import { uuidGeneratorManifest as uuidManifest } from '@toolbox/developer';
 
 export default function UUIDGeneratorPage() {
   const [options, setOptions] = useState({ count: 5, version: 'v4' as 'v4' | 'v7', uppercase: false });

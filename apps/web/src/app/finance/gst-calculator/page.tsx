@@ -5,7 +5,7 @@ import { calculateGST } from '@toolbox/finance';
 import { formatCurrency } from '@toolbox/shared';
 import type { GSTOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
-import gstManifest from '@toolbox/finance/gst-calculator';
+import { gstCalculatorManifest as gstManifest } from '@toolbox/finance';
 
 export default function GSTCalculatorPage() {
   const [result, setResult] = useState<GSTOutput | null>(null);

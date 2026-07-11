@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { generatePassword } from '@toolbox/developer';
 import type { PasswordOutput } from '@toolbox/developer';
 import { ToolLayout } from '@/components/ToolLayout';
-import passwordManifest from '@toolbox/developer/password-generator';
+import { passwordGeneratorManifest as passwordManifest } from '@toolbox/developer';
 
 export default function PasswordGeneratorPage() {
   const [options, setOptions] = useState({

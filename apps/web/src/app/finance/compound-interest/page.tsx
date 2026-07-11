@@ -5,7 +5,7 @@ import { calculateCompoundInterest } from '@toolbox/finance';
 import { formatCurrency, formatPercent } from '@toolbox/shared';
 import type { CompoundInterestOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
-import ciManifest from '@toolbox/finance/compound-interest';
+import { compoundInterestManifest as ciManifest } from '@toolbox/finance';
 
 export default function CompoundInterestPage() {
   const [result, setResult] = useState<CompoundInterestOutput | null>(null);

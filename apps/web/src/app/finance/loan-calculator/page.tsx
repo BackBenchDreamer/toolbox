@@ -5,7 +5,7 @@ import { calculateLoan } from '@toolbox/finance';
 import { formatCurrency } from '@toolbox/shared';
 import type { LoanOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
-import loanManifest from '@toolbox/finance/loan-calculator';
+import { loanCalculatorManifest as loanManifest } from '@toolbox/finance';
 
 export default function LoanCalculatorPage() {
   const [result, setResult] = useState<LoanOutput | null>(null);
