@@ -1,8 +1,10 @@
 import { ok, err, ErrorCode, roundTo } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { UnitConverterInputSchema } from './schema.js';
 import type { UnitConverterInput, UnitConverterOutput } from './schema.js';
 import { UNIT_MAP } from './units.js';
+import manifest from './manifest.js';
+
 export type { UnitConverterInput, UnitConverterOutput } from './schema.js';
 export { UNITS, UNIT_MAP } from './units.js';
 export type { UnitCategory, UnitDef } from './units.js';
@@ -52,3 +54,9 @@ export function convertUnit(input: UnitConverterInput): Result<UnitConverterOutp
 
   return ok({ value: rounded, from, to, fromLabel: fromDef.label, toLabel: toDef.label, formula });
 }
+
+/** UnitConverter — Capability implementation wrapping convertUnit(). */
+export const UnitConverter: Capability<UnitConverterInput, UnitConverterOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(convertUnit(input)),
+};

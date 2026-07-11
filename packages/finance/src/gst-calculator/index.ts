@@ -1,7 +1,10 @@
 import { ok, err, ErrorCode, roundTo } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { GSTInputSchema } from './schema.js';
 import type { GSTInput, GSTOutput } from './schema.js';
+import manifest from './manifest.js';
+
+export type { GSTInput, GSTOutput } from './schema.js';
 
 /**
  * GST Calculator — handles both exclusive and inclusive modes.
@@ -38,3 +41,9 @@ export function calculateGST(input: GSTInput): Result<GSTOutput> {
 
   return ok({ baseAmount, gstAmount, totalAmount, cgst, sgst, effectiveRate });
 }
+
+/** GSTCalculator — Capability implementation wrapping calculateGST(). */
+export const GSTCalculator: Capability<GSTInput, GSTOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(calculateGST(input)),
+};

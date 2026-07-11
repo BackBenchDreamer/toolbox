@@ -1,7 +1,9 @@
 import { ok, err, ErrorCode } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { UUIDInputSchema } from './schema.js';
 import type { UUIDInput, UUIDOutput } from './schema.js';
+import manifest from './manifest.js';
+
 export type { UUIDInput, UUIDOutput } from './schema.js';
 
 /**
@@ -27,6 +29,12 @@ export function generateUUID(input: UUIDInput): Result<UUIDOutput> {
 
   return ok({ uuids, version });
 }
+
+/** UUIDGenerator — Capability implementation wrapping generateUUID(). */
+export const UUIDGenerator: Capability<UUIDInput, UUIDOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(generateUUID(input)),
+};
 
 function generateV4(): string {
   if (typeof globalThis.crypto?.randomUUID === 'function') {

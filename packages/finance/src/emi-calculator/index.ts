@@ -1,7 +1,10 @@
 import { ok, err, ErrorCode, roundTo, computeEMI } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { EMIInputSchema } from './schema.js';
 import type { EMIInput, EMIOutput } from './schema.js';
+import manifest from './manifest.js';
+
+export type { EMIInput, EMIOutput } from './schema.js';
 
 /**
  * Calculate Equated Monthly Instalment (EMI).
@@ -23,3 +26,9 @@ export function calculateEMI(input: EMIInput): Result<EMIOutput> {
 
   return ok({ emi, totalAmount, totalInterest, monthlyRate });
 }
+
+/** EMICalculator — Capability implementation wrapping calculateEMI(). */
+export const EMICalculator: Capability<EMIInput, EMIOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(calculateEMI(input)),
+};

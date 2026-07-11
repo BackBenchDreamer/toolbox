@@ -1,7 +1,10 @@
 import { ok, err, ErrorCode, roundTo, compoundInterestAmount } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { CompoundInterestInputSchema } from './schema.js';
 import type { CompoundInterestInput, CompoundInterestOutput } from './schema.js';
+import manifest from './manifest.js';
+
+export type { CompoundInterestInput, CompoundInterestOutput } from './schema.js';
 
 /**
  * Compound Interest Calculator.
@@ -27,3 +30,9 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Result<
 
   return ok({ futureValue, totalInterest, effectiveAnnualRate });
 }
+
+/** CompoundInterestCalculator — Capability implementation wrapping calculateCompoundInterest(). */
+export const CompoundInterestCalculator: Capability<CompoundInterestInput, CompoundInterestOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(calculateCompoundInterest(input)),
+};

@@ -1,8 +1,11 @@
 import { ok, err, ErrorCode, roundTo } from '@toolbox/shared';
 import { computeEMI } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { LoanInputSchema } from './schema.js';
 import type { LoanInput, LoanOutput, AmortisationRow } from './schema.js';
+import manifest from './manifest.js';
+
+export type { LoanInput, LoanOutput, AmortisationRow } from './schema.js';
 
 /**
  * Calculate loan repayment details.
@@ -35,6 +38,18 @@ export function calculateLoan(input: LoanInput): Result<LoanOutput> {
 
   return ok({ emi, totalPayment, totalInterest, schedule });
 }
+
+/**
+ * LoanCalculator — Capability implementation.
+ *
+ * Wraps calculateLoan() in the standard Capability<Input, Output> contract.
+ * Use this as the canonical reference when wiring API routes, CLI commands,
+ * MCP tools, or any other adapter — the calculation layer remains unchanged.
+ */
+export const LoanCalculator: Capability<LoanInput, LoanOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(calculateLoan(input)),
+};
 
 /** Build a month-by-month amortisation schedule */
 function buildAmortisationSchedule(

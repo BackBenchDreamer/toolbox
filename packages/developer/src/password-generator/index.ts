@@ -1,7 +1,9 @@
 import { ok, err, ErrorCode } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { PasswordInputSchema } from './schema.js';
 import type { PasswordInput, PasswordOutput } from './schema.js';
+import manifest from './manifest.js';
+
 export type { PasswordInput, PasswordOutput } from './schema.js';
 
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -67,3 +69,9 @@ function classifyStrength(entropy: number): PasswordOutput['strength'] {
   if (entropy < 80) return 'strong';
   return 'very-strong';
 }
+
+/** PasswordGenerator — Capability implementation wrapping generatePassword(). */
+export const PasswordGenerator: Capability<PasswordInput, PasswordOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(generatePassword(input)),
+};
