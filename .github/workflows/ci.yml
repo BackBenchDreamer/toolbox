@@ -28,7 +28,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          # Disable npm cache on Windows — the cache-save post-step is flaky
+          # on Windows runners and causes spurious failures in teardown.
+          cache: ${{ matrix.os != 'windows-latest' && 'npm' || '' }}
 
       - name: Install dependencies
         run: npm ci
