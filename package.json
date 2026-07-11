@@ -20,9 +20,13 @@
     "benchmark": "node scripts/benchmark.mjs",
     "benchmark:json": "node scripts/benchmark.mjs --json-only",
     "generate:registry": "node scripts/generate-registry.mjs",
-    "check:registry": "node scripts/generate-registry.mjs --check"
+    "check:registry": "node scripts/generate-registry.mjs --check",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
     "eslint": "^9.17.0",
