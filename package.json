@@ -18,6 +18,7 @@
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
     "benchmark": "node scripts/benchmark.mjs",
+    "benchmark:json": "node scripts/benchmark.mjs --json-only",
     "generate:registry": "node scripts/generate-registry.mjs",
     "check:registry": "node scripts/generate-registry.mjs --check"
   },

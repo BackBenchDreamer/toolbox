@@ -8,15 +8,19 @@
  * Usage: node scripts/generate-registry.mjs [--check]
  *   --check   Exit with code 1 if any manifest is missing required fields
  *
- * In the future this script can write the registry index automatically.
- * For now it validates manifests and surfaces any gaps.
+ * Invariant: this script always operates relative to the monorepo root,
+ * regardless of which directory it is called from (e.g. npm prebuild in a
+ * workspace package). Path resolution uses import.meta.url, not process.cwd().
  */
 
 import { readFileSync, readdirSync, existsSync } from 'fs';
-import { join, resolve } from 'path';
-import { createRequire } from 'module';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const PACKAGES_DIR = resolve(process.cwd(), 'packages');
+// Resolve monorepo root from this file's location (scripts/ → parent)
+const __filename = fileURLToPath(import.meta.url);
+const REPO_ROOT = join(dirname(__filename), '..');
+const PACKAGES_DIR = join(REPO_ROOT, 'packages');
 const REQUIRED_FIELDS = [
   'id', 'slug', 'name', 'category', 'tags', 'description',
   'icon', 'version', 'packageName', 'route', 'apiEndpoint',
@@ -62,7 +66,7 @@ console.log(`   Scanned: ${PACKAGES_DIR}`);
 console.log(`   Manifests found: ${found.length}\n`);
 
 found.forEach((f) => {
-  const rel = f.replace(process.cwd() + '/', '');
+  const rel = f.replace(REPO_ROOT + '/', '');
   const ok = !errors.some((e) => e.startsWith(f));
   console.log(`  ${ok ? '✓' : '✗'} ${rel}`);
 });
