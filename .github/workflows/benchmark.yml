@@ -1,0 +1,92 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/**"
+      - "scripts/benchmark.mjs"
+  pull_request:
+    branches: [main]
+    paths:
+      - "packages/**"
+      - "scripts/benchmark.mjs"
+  # Allow manual trigger to compare against a specific baseline
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: "Number of benchmark runs per tool"
+        required: false
+        default: "1000"
+
+jobs:
+  benchmark:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Run benchmark (JSON output)
+        run: |
+          RUNS=${{ github.event.inputs.runs || '1000' }}
+          node scripts/benchmark.mjs --runs=$RUNS --json-only > benchmark-path.txt
+          cat benchmark-path.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.sha }}
+          path: benchmarks/
+          retention-days: 30
+
+      # Compare against latest.json from main if this is a PR
+      - name: Download baseline (main branch)
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: benchmark.yml
+          branch: main
+          name_is_regexp: true
+          name: "benchmark-results-.*"
+          path: baseline/
+          if_no_artifact_found: warn
+        continue-on-error: true
+
+      - name: Compare benchmark results
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -f baseline/latest.json ]; then
+            echo "## Benchmark Comparison" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Tool | Baseline (median) | PR (median) | Δ |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|-------------------|-------------|---|" >> $GITHUB_STEP_SUMMARY
+            node - <<'EOF'
+          const base = JSON.parse(require('fs').readFileSync('baseline/latest.json', 'utf8'));
+          const curr = JSON.parse(require('fs').readFileSync('benchmarks/latest.json', 'utf8'));
+          const fmt = (ms) => ms < 0.01 ? `${(ms*1000).toFixed(1)} µs` : `${ms.toFixed(3)} ms`;
+          for (const cr of curr.results) {
+            const br = base.results.find(r => r.id === cr.id);
+            if (!br) continue;
+            const delta = ((cr.median_ms - br.median_ms) / br.median_ms * 100).toFixed(1);
+            const flag = Math.abs(parseFloat(delta)) > 20 ? ' ⚠' : '';
+            console.log(`| ${cr.name} | ${fmt(br.median_ms)} | ${fmt(cr.median_ms)} | ${delta}%${flag} |`);
+          }
+          EOF
+          else
+            echo "No baseline found — first run on main."
+          fi
+        continue-on-error: true

@@ -1,0 +1,69 @@
+name: OpenAPI Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "api/**"
+      - "packages/registry/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "api/**"
+      - "packages/registry/**"
+
+jobs:
+  validate-openapi:
+    name: Validate OpenAPI spec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Start API server (background)
+        run: node api/dist/server.js &
+        env:
+          PORT: 3001
+          NODE_ENV: production
+
+      - name: Wait for API to be ready
+        run: |
+          for i in $(seq 1 15); do
+            if curl -sf http://127.0.0.1:3001/health > /dev/null; then
+              echo "API is ready"
+              break
+            fi
+            echo "Waiting... ($i/15)"
+            sleep 2
+          done
+
+      - name: Fetch and validate OpenAPI spec
+        run: |
+          curl -sf http://127.0.0.1:3001/api/v1/openapi.json | \
+            npx @redocly/cli lint --format github-actions /dev/stdin
+
+      - name: Save spec artifact
+        if: always()
+        run: |
+          curl -sf http://127.0.0.1:3001/api/v1/openapi.json -o openapi.json || true
+
+      - name: Upload OpenAPI spec
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-spec
+          path: openapi.json
+          retention-days: 7
