@@ -18,6 +18,7 @@ interface OpenApiSpec {
   openapi: string;
   info: object;
   servers: object[];
+  security: object[];
   tags: object[];
   paths: Record<string, unknown>;
   components: { schemas: Record<string, unknown> };
@@ -53,7 +54,6 @@ export function generateOpenApiSpec(baseUrl = 'http://127.0.0.1:3001'): OpenApiS
           content: {
             'application/json': {
               schema: { $ref: `#/components/schemas/${inputRef}` },
-              examples: buildExamples(tool, 'input'),
             },
           },
         },
@@ -70,7 +70,6 @@ export function generateOpenApiSpec(baseUrl = 'http://127.0.0.1:3001'): OpenApiS
                   },
                   required: ['success', 'data'],
                 },
-                examples: buildExamples(tool, 'output'),
               },
             },
           },
@@ -117,8 +116,11 @@ export function generateOpenApiSpec(baseUrl = 'http://127.0.0.1:3001'): OpenApiS
       description: 'Computational core of the Toolbox platform. Reusable capabilities exposed as a REST API.',
       version: '1.0.0',
       contact: { url: 'https://github.com/BackBenchDreamer/toolbox' },
+      license: { name: 'MIT', url: 'https://opensource.org/licenses/MIT' },
     },
     servers: [{ url: `${baseUrl}/api/v1`, description: 'Local development server' }],
+    /** No authentication required — all endpoints are public. */
+    security: [],
     tags,
     paths,
     components: { schemas },
@@ -159,12 +161,16 @@ function fieldToJsonSchema(f: FieldDef): OpenApiSchema {
     case 'boolean':
       return { type: 'boolean', ...(f.defaultValue !== undefined ? { default: f.defaultValue } : {}) };
     case 'select':
-    case 'enum':
+    case 'enum': {
+      const values = f.options?.map((o) => o.value) ?? [];
+      // Detect the value type from the first option so the enum type matches.
+      const enumType = values.length > 0 && typeof values[0] === 'number' ? 'number' : 'string';
       return {
-        type: 'string',
-        enum: f.options?.map((o) => o.value) ?? [],
+        type: enumType,
+        enum: values,
         ...(f.defaultValue !== undefined ? { default: f.defaultValue } : {}),
       };
+    }
     case 'array':
       return { type: 'array', items: { type: 'object' } };
     case 'object':
@@ -172,14 +178,6 @@ function fieldToJsonSchema(f: FieldDef): OpenApiSchema {
     default:
       return { type: 'string', ...(f.defaultValue !== undefined ? { default: f.defaultValue } : {}) };
   }
-}
-
-function buildExamples(tool: ToolManifest, side: 'input' | 'output'): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  for (const ex of tool.examples ?? []) {
-    result[ex.label] = { value: side === 'input' ? ex.input : { success: true, data: ex.output } };
-  }
-  return result;
 }
 
 function pascalCase(id: string): string {
