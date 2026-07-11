@@ -17,7 +17,6 @@ const manifest: ToolManifest = {
   experimental: false,
   interfaces: { api: true, cli: true, web: true, mcp: false, npm: true },
   complexity: 'O(1)',
-  estimatedMs: 0.01,
   requiresAuth: false,
   githubPath: 'packages/utilities/src/unit-converter',
   inputs: [

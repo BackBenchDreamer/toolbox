@@ -19,7 +19,6 @@ const manifest: ToolManifest = {
   experimental: false,
   interfaces: { api: true, cli: true, web: true, mcp: false, npm: true },
   complexity: 'O(n)',
-  estimatedMs: 1,
   requiresAuth: false,
   relatedTools: ['emi-calculator', 'compound-interest', 'sip-calculator'],
   githubPath: 'packages/finance/src/loan-calculator',

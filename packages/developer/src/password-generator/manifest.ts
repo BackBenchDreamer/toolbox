@@ -17,7 +17,6 @@ const manifest: ToolManifest = {
   experimental: false,
   interfaces: { api: true, cli: true, web: true, mcp: false, npm: true },
   complexity: 'O(n)',
-  estimatedMs: 0.5,
   requiresAuth: false,
   relatedTools: ['uuid-generator'],
   githubPath: 'packages/developer/src/password-generator',

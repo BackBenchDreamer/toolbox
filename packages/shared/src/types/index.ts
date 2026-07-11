@@ -116,8 +116,6 @@ export interface ToolManifest {
 
   // Performance characteristics
   complexity: ToolComplexity;
-  /** Rough expected execution time in ms (used by benchmark suite) */
-  estimatedMs?: number;
   requiresAuth: boolean;
 
   // Schema
@@ -136,6 +134,21 @@ export interface ToolManifest {
     output: Record<string, unknown>;
   }>;
   changelog?: Array<{ version: string; date: string; changes: string[] }>;
+}
+
+/**
+ * Capability abstraction — every tool implements this interface.
+ *
+ * The single contract consumed by the registry, API, CLI, web, and future
+ * MCP/SDK integrations. The calculation layer never changes; only the adapter
+ * (route handler, CLI action, MCP tool) wraps it.
+ *
+ * Note: execute() returns AsyncResult<Output> even for synchronous tools.
+ * This future-proofs tools that may later need to call external APIs or caches.
+ */
+export interface Capability<Input = unknown, Output = unknown> {
+  readonly manifest: ToolManifest;
+  execute(input: Input): AsyncResult<Output>;
 }
 
 /** Pagination metadata */
