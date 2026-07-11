@@ -1,10 +1,11 @@
 import { Router } from 'express';
+import type { Request } from 'express';
 import { generateOpenApiSpec } from '../lib/openapi.js';
 
 const router = Router();
 let cachedSpec: ReturnType<typeof generateOpenApiSpec> | null = null;
 
-function buildSpec(req: import('express').Request) {
+function buildSpec(req: Request) {
   const proto = req.headers['x-forwarded-proto'] ?? req.protocol;
   const host = req.headers['x-forwarded-host'] ?? req.headers.host ?? 'localhost:3001';
   return generateOpenApiSpec(`${proto}://${host}`);

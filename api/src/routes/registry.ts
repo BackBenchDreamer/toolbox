@@ -17,7 +17,8 @@ router.get('/search', (req: Request, res: Response) => {
 
 /** GET /api/registry/:id — single tool manifest */
 router.get('/:id', (req: Request, res: Response) => {
-  const tool = getToolById(req.params['id'] ?? '');
+  const rawId = req.params['id'];
+  const tool = getToolById(typeof rawId === 'string' ? rawId : '');
   if (!tool) {
     res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Tool not found' } });
     return;

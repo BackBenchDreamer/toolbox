@@ -138,12 +138,13 @@ function buildObjectSchema(fields: FieldDef[], tool: ToolManifest): OpenApiSchem
     if (!f.optional) required.push(f.name);
   }
 
-  return {
+  const schema: OpenApiSchema = {
     type: 'object',
     description: `${tool.name} ${fields === tool.inputs ? 'input' : 'output'}`,
     properties,
-    required: required.length ? required : undefined,
   };
+  if (required.length) schema.required = required;
+  return schema;
 }
 
 function fieldToJsonSchema(f: FieldDef): OpenApiSchema {
