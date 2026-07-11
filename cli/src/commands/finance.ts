@@ -1,9 +1,6 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import chalk from 'chalk';
-import { calculateLoan } from '@toolbox/finance';
-import { calculateEMI } from '@toolbox/finance';
-import { calculateSIP } from '@toolbox/finance';
-import { calculateGST } from '@toolbox/finance';
+import { calculateLoan, calculateEMI, calculateSIP, calculateGST } from '@toolbox/finance';
 import { printResult, printError } from '../lib/output.js';
 
 export function registerFinanceCommands(program: Command): void {

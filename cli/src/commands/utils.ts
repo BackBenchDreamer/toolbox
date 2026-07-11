@@ -1,9 +1,8 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import chalk from 'chalk';
 import { convertUnit, UNITS } from '@toolbox/utilities';
-import { generatePassword } from '@toolbox/developer';
-import { generateUUID } from '@toolbox/developer';
-import { printResult, printError } from '../lib/output.js';
+import { generatePassword, generateUUID } from '@toolbox/developer';
+import { printError } from '../lib/output.js';
 
 export function registerUtilCommands(program: Command): void {
   // toolbox convert 100 km mi
