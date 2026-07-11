@@ -27,6 +27,6 @@ export const LoanOutputSchema = z.object({
   schedule: z.array(AmortisationRowSchema).optional(),
 });
 
-export type LoanInput = z.infer<typeof LoanInputSchema>;
+export type LoanInput = z.input<typeof LoanInputSchema>;
 export type LoanOutput = z.infer<typeof LoanOutputSchema>;
 export type AmortisationRow = z.infer<typeof AmortisationRowSchema>;
