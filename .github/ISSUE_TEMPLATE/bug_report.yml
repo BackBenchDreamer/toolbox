@@ -1,0 +1,96 @@
+name: "🐛 Bug Report"
+description: "Report a calculation error, incorrect output, or unexpected behaviour"
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill in the sections below
+        so we can reproduce and fix it quickly.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected package
+      description: Which package contains the broken tool?
+      multiple: false
+      options:
+        - "@toolbox/finance"
+        - "@toolbox/utilities"
+        - "@toolbox/developer"
+        - "@toolbox/shared"
+        - "@toolbox/registry"
+        - "@toolbox/sdk"
+        - "api"
+        - "cli"
+        - "apps/web"
+        - "other / unsure"
+    validations:
+      required: true
+
+  - type: input
+    id: tool-id
+    attributes:
+      label: Tool ID
+      description: The tool's registry ID (e.g. `loan-calculator`, `unit-converter`)
+      placeholder: "loan-calculator"
+    validations:
+      required: false
+
+  - type: textarea
+    id: input
+    attributes:
+      label: Input that causes the bug
+      description: Paste the exact input values you used
+      render: json
+      placeholder: |
+        {
+          "principal": 500000,
+          "annualRatePercent": 8.5,
+          "tenureMonths": 240
+        }
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected output
+      description: What did you expect to get?
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual output
+      description: What did you actually get?
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: |
+        If applicable, paste a short code snippet or CLI command that reproduces the issue.
+      render: typescript
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      placeholder: "22.x"
+    validations:
+      required: true

@@ -1,0 +1,101 @@
+name: "🔧 New Tool Request"
+description: "Propose a new calculator, converter, or utility tool"
+labels: ["new-tool", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to propose a new tool. The more detail you provide,
+        the faster we can evaluate and implement it.
+
+  - type: input
+    id: tool-name
+    attributes:
+      label: Tool name
+      description: A clear, descriptive name (e.g. "Mortgage Amortisation Calculator")
+      placeholder: "Bitwise Operations Calculator"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - finance
+        - engineering
+        - developer
+        - utilities
+        - productivity
+        - converters
+        - text
+        - networking
+        - system
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What does this tool do?
+      description: One or two sentences. This becomes the registry `description` field.
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs
+      description: |
+        List the expected input fields, types, and any constraints.
+      placeholder: |
+        - value: number — the value to convert
+        - fromBase: number (2–36) — source base
+        - toBase: number (2–36) — target base
+
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Outputs
+      description: List the output fields and types.
+      placeholder: |
+        - result: string — the converted value in the target base
+        - formatted: string — the value with base prefix (0x, 0b, etc.)
+
+  - type: textarea
+    id: formula
+    attributes:
+      label: Formula or algorithm (if applicable)
+      description: Link to a reference or describe the maths involved.
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example inputs and outputs
+      render: json
+      placeholder: |
+        [
+          {
+            "label": "Decimal to hex",
+            "input": { "value": 255, "fromBase": 10, "toBase": 16 },
+            "output": { "result": "ff" }
+          }
+        ]
+
+  - type: checkboxes
+    id: interfaces
+    attributes:
+      label: Required interfaces
+      options:
+        - label: Web UI
+        - label: REST API
+        - label: CLI
+        - label: npm package export
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Links to specifications, Wikipedia articles, or prior art.

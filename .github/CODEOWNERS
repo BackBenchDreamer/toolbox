@@ -1,0 +1,34 @@
+# CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# These owners are automatically requested for review when a PR touches the
+# corresponding paths. Maintainers should update this file as the team grows.
+
+# ─── Global fallback ─────────────────────────────────────────────────────────
+*                               @BackBenchDreamer
+
+# ─── Core architecture ───────────────────────────────────────────────────────
+packages/shared/                @BackBenchDreamer
+packages/registry/              @BackBenchDreamer
+.changeset/                     @BackBenchDreamer
+turbo.json                      @BackBenchDreamer
+tsconfig.base.json              @BackBenchDreamer
+
+# ─── Tool packages ───────────────────────────────────────────────────────────
+packages/finance/               @BackBenchDreamer
+packages/utilities/             @BackBenchDreamer
+packages/developer/             @BackBenchDreamer
+
+# ─── SDK ─────────────────────────────────────────────────────────────────────
+packages/sdk/                   @BackBenchDreamer
+
+# ─── API & CLI ───────────────────────────────────────────────────────────────
+api/                            @BackBenchDreamer
+cli/                            @BackBenchDreamer
+
+# ─── Web application ─────────────────────────────────────────────────────────
+apps/web/                       @BackBenchDreamer
+
+# ─── CI / Release ────────────────────────────────────────────────────────────
+.github/workflows/              @BackBenchDreamer
+scripts/                        @BackBenchDreamer
