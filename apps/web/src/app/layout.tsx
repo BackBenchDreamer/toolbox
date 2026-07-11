@@ -4,6 +4,10 @@ import '../styles/globals.css';
 export const metadata: Metadata = {
   title: 'Toolbox — Utilities & Calculators',
   description: 'A collection of reusable utilities, calculators, converters, and productivity tools.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
