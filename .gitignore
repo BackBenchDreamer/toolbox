@@ -40,3 +40,7 @@ npm-debug.log*
 # ─── Temp / scratch ─────────────────────────────────────────────────────────
 tmp/
 .tmp/
+
+# ─── Benchmarks ─────────────────────────────────────────────────────────────
+# Dated result files are ephemeral; only latest.json is tracked for CI diffing
+benchmarks/results/
