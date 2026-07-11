@@ -1,0 +1,37 @@
+{
+  "name": "@toolbox/shared",
+  "version": "0.1.0",
+  "description": "Shared types, errors, validation utilities, and formatters for the toolbox monorepo",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "vitest run --config vitest.config.ts",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "vitest": "^3.2.7",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "sideEffects": false
+}
