@@ -2,6 +2,7 @@
   "name": "@toolbox/cli",
   "version": "0.1.0",
   "description": "CLI for toolbox utilities",
+  "type": "module",
   "bin": {
     "toolbox": "./dist/cli.js"
   },
