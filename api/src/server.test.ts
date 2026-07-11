@@ -75,6 +75,9 @@ describe('POST /api/v1/finance/loan-calculator', () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(typeof res.body.data.emi).toBe('number');
+    expect(typeof res.body.data.interestPercent).toBe('number');
+    expect(Array.isArray(res.body.data.warnings)).toBe(true);
+    expect(Array.isArray(res.body.data.recommendations)).toBe(true);
   });
 
   it('422 with invalid input', async () => {
@@ -242,6 +245,53 @@ describe('POST /api/v1/utilities/unit-converter', () => {
     const res = await request(app)
       .post('/api/v1/utilities/unit-converter')
       .send({ value: 100, from: 'nope', to: 'm' });
+    expect(res.status).toBe(422);
+    expect(res.body.success).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Finance — Reverse Loan
+// ---------------------------------------------------------------------------
+
+describe('POST /api/v1/finance/reverse-loan', () => {
+  it('200 with valid input', async () => {
+    const res = await request(app)
+      .post('/api/v1/finance/reverse-loan')
+      .send({ emi: 10000, annualRatePercent: 10, tenureMonths: 12 });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(typeof res.body.data.principal).toBe('number');
+  });
+
+  it('422 with invalid input', async () => {
+    const res = await request(app)
+      .post('/api/v1/finance/reverse-loan')
+      .send({ emi: 0, annualRatePercent: 10, tenureMonths: 12 });
+    expect(res.status).toBe(422);
+    expect(res.body.success).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Finance — Prepayment Simulation
+// ---------------------------------------------------------------------------
+
+describe('POST /api/v1/finance/prepayment-simulation', () => {
+  it('200 with valid input', async () => {
+    const res = await request(app)
+      .post('/api/v1/finance/prepayment-simulation')
+      .send({ principal: 500000, annualRatePercent: 10, tenureMonths: 60, prepayments: [{ month: 12, amount: 50000 }] });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(typeof res.body.data.interestSaved).toBe('number');
+    expect(res.body.data.monthsSaved).toBeGreaterThan(0);
+  });
+
+  it('422 with no prepayments', async () => {
+    const res = await request(app)
+      .post('/api/v1/finance/prepayment-simulation')
+      .send({ principal: 500000, annualRatePercent: 10, tenureMonths: 60, prepayments: [] });
     expect(res.status).toBe(422);
     expect(res.body.success).toBe(false);
   });

@@ -15,6 +15,34 @@
   --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
 }
 
+/* ─── Dark mode ──────────────────────────────────────────────────────────────
+   Applied via data-theme="dark" on <html>. Falls back to OS preference.   */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --error: #f85149;
+    --success: #3fb950;
+  }
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --error: #f85149;
+  --success: #3fb950;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {

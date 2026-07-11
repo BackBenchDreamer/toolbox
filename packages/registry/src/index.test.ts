@@ -249,9 +249,11 @@ describe('registry object (dynamic dispatch)', () => {
     }
   });
 
-  it('registry.execute() works for all 8 registered tools', async () => {
+  it('registry.execute() works for all registered tools', async () => {
     const inputs: Record<string, Record<string, unknown>> = {
       'loan-calculator': { principal: 100000, annualRatePercent: 8, tenureMonths: 12 },
+      'reverse-loan': { emi: 8791, annualRatePercent: 10, tenureMonths: 12 },
+      'prepayment-simulation': { principal: 500000, annualRatePercent: 10, tenureMonths: 60, prepayments: [{ month: 6, amount: 50000 }] },
       'emi-calculator': { principal: 100000, annualRatePercent: 8, tenureMonths: 12 },
       'sip-calculator': { monthlyInvestment: 5000, annualRatePercent: 12, tenureMonths: 12 },
       'compound-interest': { principal: 100000, annualRatePercent: 8, years: 1, compoundingsPerYear: 12 },

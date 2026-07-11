@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getActiveCategories } from '@toolbox/registry';
 import { Analytics } from '@vercel/analytics/next';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href="/" style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', letterSpacing: '-0.02em' }}>
               ◈ Toolbox
             </a>
-            <nav style={{ marginLeft: 'auto', display: 'flex', gap: '1rem' }}>
+            <nav style={{ marginLeft: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
               {categories.map((cat) => (
                 <a
                   key={cat}
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {cat}
                 </a>
               ))}
+              <ThemeToggle />
             </nav>
           </div>
         </header>
