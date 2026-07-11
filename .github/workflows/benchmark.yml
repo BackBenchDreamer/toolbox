@@ -74,9 +74,10 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "| Tool | Baseline (median) | PR (median) | Δ |" >> $GITHUB_STEP_SUMMARY
             echo "|------|-------------------|-------------|---|" >> $GITHUB_STEP_SUMMARY
-            node - <<'EOF'
-          const base = JSON.parse(require('fs').readFileSync('baseline/latest.json', 'utf8'));
-          const curr = JSON.parse(require('fs').readFileSync('benchmarks/latest.json', 'utf8'));
+            node --input-type=module <<'EOF'
+          import { readFileSync } from 'fs';
+          const base = JSON.parse(readFileSync('baseline/latest.json', 'utf8'));
+          const curr = JSON.parse(readFileSync('benchmarks/latest.json', 'utf8'));
           const fmt = (ms) => ms < 0.01 ? `${(ms*1000).toFixed(1)} µs` : `${ms.toFixed(3)} ms`;
           for (const cr of curr.results) {
             const br = base.results.find(r => r.id === cr.id);
