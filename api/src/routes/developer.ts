@@ -1,18 +1,20 @@
 import { Router } from 'express';
-import { generatePassword } from '@toolbox/developer';
-import { generateUUID } from '@toolbox/developer';
-import { sendResult } from '../lib/respond.js';
+import { PasswordGenerator, UUIDGenerator } from '@toolbox/developer';
+import { asyncSendResult } from '../lib/respond.js';
 
+/**
+ * Developer routes — thin adapters over Capability.execute().
+ */
 const router = Router();
 
-/** POST /api/developer/password-generator */
+/** POST /api/v1/developer/password-generator */
 router.post('/password-generator', (req, res) => {
-  sendResult(res, generatePassword(req.body));
+  void asyncSendResult(res, PasswordGenerator.execute(req.body));
 });
 
-/** POST /api/developer/uuid-generator */
+/** POST /api/v1/developer/uuid-generator */
 router.post('/uuid-generator', (req, res) => {
-  sendResult(res, generateUUID(req.body));
+  void asyncSendResult(res, UUIDGenerator.execute(req.body));
 });
 
 export { router as developerRouter };

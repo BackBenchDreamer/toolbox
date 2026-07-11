@@ -1,12 +1,15 @@
 import { Router } from 'express';
-import { convertUnit } from '@toolbox/utilities';
-import { sendResult } from '../lib/respond.js';
+import { UnitConverter } from '@toolbox/utilities';
+import { asyncSendResult } from '../lib/respond.js';
 
+/**
+ * Utilities routes — thin adapters over Capability.execute().
+ */
 const router = Router();
 
-/** POST /api/utilities/unit-converter */
+/** POST /api/v1/utilities/unit-converter */
 router.post('/unit-converter', (req, res) => {
-  sendResult(res, convertUnit(req.body));
+  void asyncSendResult(res, UnitConverter.execute(req.body));
 });
 
 export { router as utilitiesRouter };

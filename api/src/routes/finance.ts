@@ -1,36 +1,46 @@
 import { Router } from 'express';
-import { calculateLoan } from '@toolbox/finance';
-import { calculateEMI } from '@toolbox/finance';
-import { calculateSIP } from '@toolbox/finance';
-import { calculateCompoundInterest } from '@toolbox/finance';
-import { calculateGST } from '@toolbox/finance';
-import { sendResult } from '../lib/respond.js';
+import {
+  LoanCalculator,
+  EMICalculator,
+  SIPCalculator,
+  CompoundInterestCalculator,
+  GSTCalculator,
+} from '@toolbox/finance';
+import { asyncSendResult } from '../lib/respond.js';
 
+/**
+ * Finance routes — thin adapters over Capability.execute().
+ *
+ * No business logic lives here. Each handler:
+ *   1. Passes req.body directly to the Capability.
+ *   2. Awaits the AsyncResult<T>.
+ *   3. Sends the standardised API envelope via asyncSendResult.
+ */
 const router = Router();
 
-/** POST /api/finance/loan-calculator */
+/** POST /api/v1/finance/loan-calculator */
 router.post('/loan-calculator', (req, res) => {
-  sendResult(res, calculateLoan(req.body));
+  void asyncSendResult(res, LoanCalculator.execute(req.body));
 });
 
-/** POST /api/finance/emi-calculator */
+/** POST /api/v1/finance/emi-calculator */
 router.post('/emi-calculator', (req, res) => {
-  sendResult(res, calculateEMI(req.body));
+  void asyncSendResult(res, EMICalculator.execute(req.body));
 });
 
-/** POST /api/finance/sip-calculator */
+/** POST /api/v1/finance/sip-calculator */
 router.post('/sip-calculator', (req, res) => {
-  sendResult(res, calculateSIP(req.body));
+  void asyncSendResult(res, SIPCalculator.execute(req.body));
 });
 
-/** POST /api/finance/compound-interest */
+/** POST /api/v1/finance/compound-interest */
 router.post('/compound-interest', (req, res) => {
-  sendResult(res, calculateCompoundInterest(req.body));
+  void asyncSendResult(res, CompoundInterestCalculator.execute(req.body));
 });
 
-/** POST /api/finance/gst-calculator */
+/** POST /api/v1/finance/gst-calculator */
 router.post('/gst-calculator', (req, res) => {
-  sendResult(res, calculateGST(req.body));
+  void asyncSendResult(res, GSTCalculator.execute(req.body));
 });
 
 export { router as financeRouter };

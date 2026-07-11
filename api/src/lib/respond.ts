@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { ApiResponse, ToolError } from '@toolbox/shared';
+import type { ApiResponse, AsyncResult, ToolError } from '@toolbox/shared';
 
 /**
  * Wrap a package function call in a standard API response envelope.
@@ -16,6 +16,28 @@ export function sendResult<T>(
     const response: ApiResponse<never> = { success: false, error: result.error };
     const status = result.error.code === 'NOT_FOUND' ? 404 : 422;
     res.status(status).json(response);
+  }
+}
+
+/**
+ * Async variant of sendResult — resolves an AsyncResult<T> before sending.
+ * Use this for Capability.execute() calls in route handlers.
+ *
+ * Any unexpected rejection is caught and returned as an INTERNAL_ERROR response.
+ */
+export async function asyncSendResult<T>(res: Response, promise: AsyncResult<T>): Promise<void> {
+  try {
+    const result = await promise;
+    sendResult(res, result);
+  } catch (e) {
+    const response: ApiResponse<never> = {
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: e instanceof Error ? e.message : 'Unexpected error',
+      },
+    };
+    res.status(500).json(response);
   }
 }
 
