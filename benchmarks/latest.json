@@ -1,0 +1,98 @@
+{
+  "generated": "2026-07-12T09:23:28.512Z",
+  "runs": 100,
+  "warmup": 10,
+  "nodeVersion": "v24.14.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "results": [
+    {
+      "id": "loan-calculator",
+      "name": "Loan Calculator",
+      "median_ms": 0.007792,
+      "p95_ms": 0.02125,
+      "min_ms": 0.005583,
+      "max_ms": 0.42575,
+      "mean_ms": 0.013454,
+      "ops_per_sec": 74327,
+      "avg_heap_bytes": 18226
+    },
+    {
+      "id": "emi-calculator",
+      "name": "EMI Calculator",
+      "median_ms": 0.001708,
+      "p95_ms": 0.004083,
+      "min_ms": 0.001583,
+      "max_ms": 0.006458,
+      "mean_ms": 0.002046,
+      "ops_per_sec": 488809,
+      "avg_heap_bytes": 4010
+    },
+    {
+      "id": "sip-calculator",
+      "name": "SIP Calculator",
+      "median_ms": 0.001958,
+      "p95_ms": 0.004583,
+      "min_ms": 0.001791,
+      "max_ms": 0.0075,
+      "mean_ms": 0.002459,
+      "ops_per_sec": 406651,
+      "avg_heap_bytes": 10358
+    },
+    {
+      "id": "compound-interest",
+      "name": "Compound Interest",
+      "median_ms": 0.003208,
+      "p95_ms": 0.014209,
+      "min_ms": 0.002375,
+      "max_ms": 0.21025,
+      "mean_ms": 0.006255,
+      "ops_per_sec": 159882,
+      "avg_heap_bytes": 14156
+    },
+    {
+      "id": "gst-calculator",
+      "name": "GST Calculator",
+      "median_ms": 0.002125,
+      "p95_ms": 0.007209,
+      "min_ms": 0.002,
+      "max_ms": 0.017791,
+      "mean_ms": 0.0028,
+      "ops_per_sec": 357092,
+      "avg_heap_bytes": 8682
+    },
+    {
+      "id": "unit-converter",
+      "name": "Unit Converter (km→mi)",
+      "median_ms": 0.003709,
+      "p95_ms": 0.005209,
+      "min_ms": 0.003334,
+      "max_ms": 0.007791,
+      "mean_ms": 0.00386,
+      "ops_per_sec": 259067,
+      "avg_heap_bytes": 11513
+    },
+    {
+      "id": "password-generator",
+      "name": "Password Generator",
+      "median_ms": 0.009,
+      "p95_ms": 0.02825,
+      "min_ms": 0.006833,
+      "max_ms": 0.205791,
+      "mean_ms": 0.013581,
+      "ops_per_sec": 73631,
+      "avg_heap_bytes": 26042
+    },
+    {
+      "id": "uuid-generator",
+      "name": "UUID Generator (×10)",
+      "median_ms": 0.005916,
+      "p95_ms": 0.013875,
+      "min_ms": 0.003958,
+      "max_ms": 0.217625,
+      "mean_ms": 0.008526,
+      "ops_per_sec": 117286,
+      "avg_heap_bytes": 20989
+    }
+  ]
+}

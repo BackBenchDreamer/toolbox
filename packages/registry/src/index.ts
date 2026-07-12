@@ -1,6 +1,8 @@
 import type { ToolManifest, ToolCategory, Capability } from '@toolbox/shared';
 import {
   loanCalculatorManifest,
+  reverseLoanManifest,
+  prepaymentSimulationManifest,
   emiCalculatorManifest,
   sipCalculatorManifest,
   compoundInterestManifest,
@@ -10,23 +12,47 @@ import {
   SIPCalculator,
   CompoundInterestCalculator,
   GSTCalculator,
+  calculateReverseLoan,
+  simulatePrepayment,
 } from '@toolbox/finance';
 import { unitConverterManifest, UnitConverter } from '@toolbox/utilities';
 import { passwordGeneratorManifest, uuidGeneratorManifest, PasswordGenerator, UUIDGenerator } from '@toolbox/developer';
 
 export type { ToolManifest, ToolCategory, Capability };
 
-/** All registered Capability objects, keyed by tool id. */
-export const CAPABILITIES: ReadonlyMap<string, Capability> = new Map<string, Capability>([
-  [LoanCalculator.manifest.id, LoanCalculator as Capability],
-  [EMICalculator.manifest.id, EMICalculator as Capability],
-  [SIPCalculator.manifest.id, SIPCalculator as Capability],
-  [CompoundInterestCalculator.manifest.id, CompoundInterestCalculator as Capability],
-  [GSTCalculator.manifest.id, GSTCalculator as Capability],
-  [UnitConverter.manifest.id, UnitConverter as Capability],
-  [PasswordGenerator.manifest.id, PasswordGenerator as Capability],
-  [UUIDGenerator.manifest.id, UUIDGenerator as Capability],
-]);
+/**
+ * Single source of truth for all registered tools.
+ *
+ * To add a new tool: add ONE entry here.
+ * ALL_TOOLS and CAPABILITIES are derived from this array — no dual maintenance.
+ *
+ * Dependency rule: entries must always point inward.
+ *   UI → API → Registry → packages → shared
+ *   Never sideways. Never upward.
+ */
+const TOOL_ENTRIES: Array<{ manifest: ToolManifest; capability: Capability }> = [
+  { manifest: loanCalculatorManifest,           capability: LoanCalculator as Capability },
+  {
+    manifest: reverseLoanManifest,
+    capability: { manifest: reverseLoanManifest, execute: (i) => Promise.resolve(calculateReverseLoan(i as Parameters<typeof calculateReverseLoan>[0])) } as Capability,
+  },
+  {
+    manifest: prepaymentSimulationManifest,
+    capability: { manifest: prepaymentSimulationManifest, execute: (i) => Promise.resolve(simulatePrepayment(i as Parameters<typeof simulatePrepayment>[0])) } as Capability,
+  },
+  { manifest: emiCalculatorManifest,       capability: EMICalculator as Capability },
+  { manifest: sipCalculatorManifest,       capability: SIPCalculator as Capability },
+  { manifest: compoundInterestManifest,    capability: CompoundInterestCalculator as Capability },
+  { manifest: gstCalculatorManifest,       capability: GSTCalculator as Capability },
+  { manifest: unitConverterManifest,       capability: UnitConverter as Capability },
+  { manifest: passwordGeneratorManifest,   capability: PasswordGenerator as Capability },
+  { manifest: uuidGeneratorManifest,       capability: UUIDGenerator as Capability },
+];
+
+/** All registered Capability objects, keyed by tool id. Derived from TOOL_ENTRIES. */
+export const CAPABILITIES: ReadonlyMap<string, Capability> = new Map(
+  TOOL_ENTRIES.map((e) => [e.manifest.id, e.capability]),
+);
 
 /** Lookup a Capability by its tool id. Returns undefined if not registered. */
 export function getCapability(id: string): Capability | undefined {
@@ -84,28 +110,14 @@ export const registry = {
 } as const;
 
 /**
- * Master registry — single source of truth for all capabilities.
- *
- * Dependency rule: entries must always point inward.
- *   UI → API → Registry → packages → shared
- *   Never sideways. Never upward.
+ * All registered tool manifests — derived from TOOL_ENTRIES.
  *
  * To add a new tool:
  *   1. Create the tool in the appropriate package.
- *   2. Import its manifest here.
- *   3. Append it to ALL_TOOLS.
- *   4. Everything else (homepage, search, API docs, sitemap) updates automatically.
+ *   2. Add a single entry to TOOL_ENTRIES above.
+ *   3. Everything else (homepage, search, API docs, sitemap) updates automatically.
  */
-const ALL_TOOLS: readonly ToolManifest[] = [
-  loanCalculatorManifest,
-  emiCalculatorManifest,
-  sipCalculatorManifest,
-  compoundInterestManifest,
-  gstCalculatorManifest,
-  unitConverterManifest,
-  passwordGeneratorManifest,
-  uuidGeneratorManifest,
-];
+const ALL_TOOLS: readonly ToolManifest[] = TOOL_ENTRIES.map((e) => e.manifest);
 
 export { ALL_TOOLS };
 

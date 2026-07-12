@@ -56,7 +56,7 @@ export default function UUIDGeneratorPage() {
         {error && <p className="error-message" role="alert">{error}</p>}
 
         {result && (
-          <div className="result-box">
+          <div className="result-box" role="region" aria-live="polite" aria-label="Generated UUIDs">
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.8rem' }}>
               <span style={{ color: 'var(--muted)' }}>{result.uuids.length} UUID{result.uuids.length > 1 ? 's' : ''} · {result.version}</span>
               <button className="btn-secondary" onClick={copyAll}

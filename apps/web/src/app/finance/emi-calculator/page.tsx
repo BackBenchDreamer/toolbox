@@ -46,7 +46,7 @@ export default function EMICalculatorPage() {
       </form>
 
       {result && (
-        <div className="result-box" role="region" aria-label="EMI results">
+        <div className="result-box" role="region" aria-live="polite" aria-label="EMI results">
           {([
             ['Monthly EMI', formatCurrency(result.emi)],
             ['Total Amount', formatCurrency(result.totalAmount)],

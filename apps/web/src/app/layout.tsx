@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { getActiveCategories } from '@toolbox/registry';
+import { Analytics } from '@vercel/analytics/next';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -11,6 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Derive nav items from the registry so adding a new category never requires
+  // editing this file. getActiveCategories() returns only categories that have
+  // at least one public/beta tool.
+  const categories = getActiveCategories();
+
   return (
     <html lang="en">
       <body>
@@ -19,10 +27,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href="/" style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', letterSpacing: '-0.02em' }}>
               ◈ Toolbox
             </a>
-            <nav style={{ marginLeft: 'auto', display: 'flex', gap: '1rem' }}>
-              <a href="/finance" style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>Finance</a>
-              <a href="/developer" style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>Developer</a>
-              <a href="/utilities" style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>Utilities</a>
+            <nav style={{ marginLeft: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              {categories.map((cat) => (
+                <a
+                  key={cat}
+                  href={`/${cat}`}
+                  style={{ color: 'var(--muted)', fontSize: '0.9rem', textTransform: 'capitalize' }}
+                >
+                  {cat}
+                </a>
+              ))}
+              <ThemeToggle />
             </nav>
           </div>
         </header>
@@ -32,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer style={{ borderTop: '1px solid var(--border)', marginTop: '4rem', padding: '1.5rem 0', textAlign: 'center', color: 'var(--muted)', fontSize: '0.8rem' }}>
           Toolbox · Open source utility platform
         </footer>
+        <Analytics />
       </body>
     </html>
   );

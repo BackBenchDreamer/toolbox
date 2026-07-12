@@ -1,0 +1,39 @@
+version: 2
+updates:
+  # npm dependencies — root workspace
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    groups:
+      # Keep TypeScript toolchain updates together
+      typescript-toolchain:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "tsup"
+          - "tsx"
+      # Keep test toolchain together
+      test-toolchain:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "supertest"
+          - "@types/supertest"
+      # Keep Next.js and React together
+      nextjs:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
