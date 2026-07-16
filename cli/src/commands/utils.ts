@@ -12,7 +12,7 @@ export function registerUtilCommands(program: Command): void {
     .action((value: string, from: string, to: string) => {
       const result = convertUnit({ value: parseFloat(value), from, to });
       if (!result.success) { printError(result.error); process.exit(1); }
-      console.warn(chalk.green(result.data.formula));
+      console.log(chalk.green(result.data.formula));
     });
 
   // toolbox units [category]
@@ -21,9 +21,9 @@ export function registerUtilCommands(program: Command): void {
     .description('List available unit keys (optionally filter by category)')
     .action((category?: string) => {
       const filtered = category ? UNITS.filter((u) => u.category === category) : UNITS;
-      console.warn(chalk.bold('Available units:'));
+      console.log(chalk.bold('Available units:'));
       for (const u of filtered) {
-        console.warn(`  ${chalk.cyan(u.key.padEnd(8))} ${u.label.padEnd(20)} ${chalk.dim(u.category)}`);
+        console.log(`  ${chalk.cyan(u.key.padEnd(8))} ${u.label.padEnd(20)} ${chalk.dim(u.category)}`);
       }
     });
 
@@ -48,8 +48,8 @@ export function registerUtilCommands(program: Command): void {
         count: parseInt(opts.count),
       });
       if (!result.success) { printError(result.error); process.exit(1); }
-      result.data.passwords.forEach((p) => console.warn(p));
-      console.warn(chalk.dim(`\nEntropy: ${result.data.entropy} bits | Strength: ${result.data.strength}`));
+      result.data.passwords.forEach((p) => console.log(p));
+      console.log(chalk.dim(`\nEntropy: ${result.data.entropy} bits | Strength: ${result.data.strength}`));
     });
 
   // toolbox uuid [--count 5] [--v7]
@@ -66,6 +66,6 @@ export function registerUtilCommands(program: Command): void {
         uppercase: opts.upper ?? false,
       });
       if (!result.success) { printError(result.error); process.exit(1); }
-      result.data.uuids.forEach((id) => console.warn(id));
+      result.data.uuids.forEach((id) => console.log(id));
     });
 }
