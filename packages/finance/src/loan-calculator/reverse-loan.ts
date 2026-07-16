@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { ok, err, ErrorCode, roundTo } from '@toolbox/shared';
 import { computeEMI } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { positiveNumberSchema, positiveIntegerSchema } from '@toolbox/shared';
+import manifest from './reverse-loan-manifest.js';
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -72,3 +73,14 @@ export function calculateReverseLoan(input: ReverseLoanInput): Result<ReverseLoa
 
   return ok({ principal, totalPayment, totalInterest, interestPercent });
 }
+
+/**
+ * ReverseLoanCalculator — Capability implementation wrapping calculateReverseLoan().
+ *
+ * Follows the same pattern as all other registered capabilities (LoanCalculator,
+ * EMICalculator, etc.). Eliminates the inline capability object in the registry.
+ */
+export const ReverseLoanCalculator: Capability<ReverseLoanInput, ReverseLoanOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(calculateReverseLoan(input)),
+};

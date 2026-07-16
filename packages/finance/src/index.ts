@@ -5,6 +5,10 @@ export * from './sip-calculator/index.js';
 export * from './compound-interest/index.js';
 export * from './gst-calculator/index.js';
 
+// Capability objects — sub-tools within loan-calculator
+export { ReverseLoanCalculator } from './loan-calculator/reverse-loan.js';
+export { PrepaymentSimulationCalculator } from './loan-calculator/prepayment.js';
+
 // Re-export manifests
 export { default as loanCalculatorManifest } from './loan-calculator/manifest.js';
 export { default as reverseLoanManifest } from './loan-calculator/reverse-loan-manifest.js';

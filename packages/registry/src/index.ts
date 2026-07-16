@@ -12,8 +12,8 @@ import {
   SIPCalculator,
   CompoundInterestCalculator,
   GSTCalculator,
-  calculateReverseLoan,
-  simulatePrepayment,
+  ReverseLoanCalculator,
+  PrepaymentSimulationCalculator,
 } from '@toolbox/finance';
 import { unitConverterManifest, UnitConverter } from '@toolbox/utilities';
 import { passwordGeneratorManifest, uuidGeneratorManifest, PasswordGenerator, UUIDGenerator } from '@toolbox/developer';
@@ -31,22 +31,16 @@ export type { ToolManifest, ToolCategory, Capability };
  *   Never sideways. Never upward.
  */
 const TOOL_ENTRIES: Array<{ manifest: ToolManifest; capability: Capability }> = [
-  { manifest: loanCalculatorManifest,           capability: LoanCalculator as Capability },
-  {
-    manifest: reverseLoanManifest,
-    capability: { manifest: reverseLoanManifest, execute: (i) => Promise.resolve(calculateReverseLoan(i as Parameters<typeof calculateReverseLoan>[0])) } as Capability,
-  },
-  {
-    manifest: prepaymentSimulationManifest,
-    capability: { manifest: prepaymentSimulationManifest, execute: (i) => Promise.resolve(simulatePrepayment(i as Parameters<typeof simulatePrepayment>[0])) } as Capability,
-  },
-  { manifest: emiCalculatorManifest,       capability: EMICalculator as Capability },
-  { manifest: sipCalculatorManifest,       capability: SIPCalculator as Capability },
-  { manifest: compoundInterestManifest,    capability: CompoundInterestCalculator as Capability },
-  { manifest: gstCalculatorManifest,       capability: GSTCalculator as Capability },
-  { manifest: unitConverterManifest,       capability: UnitConverter as Capability },
-  { manifest: passwordGeneratorManifest,   capability: PasswordGenerator as Capability },
-  { manifest: uuidGeneratorManifest,       capability: UUIDGenerator as Capability },
+  { manifest: loanCalculatorManifest,        capability: LoanCalculator as Capability },
+  { manifest: reverseLoanManifest,           capability: ReverseLoanCalculator as Capability },
+  { manifest: prepaymentSimulationManifest,  capability: PrepaymentSimulationCalculator as Capability },
+  { manifest: emiCalculatorManifest,         capability: EMICalculator as Capability },
+  { manifest: sipCalculatorManifest,         capability: SIPCalculator as Capability },
+  { manifest: compoundInterestManifest,      capability: CompoundInterestCalculator as Capability },
+  { manifest: gstCalculatorManifest,         capability: GSTCalculator as Capability },
+  { manifest: unitConverterManifest,         capability: UnitConverter as Capability },
+  { manifest: passwordGeneratorManifest,     capability: PasswordGenerator as Capability },
+  { manifest: uuidGeneratorManifest,         capability: UUIDGenerator as Capability },
 ];
 
 /** All registered Capability objects, keyed by tool id. Derived from TOOL_ENTRIES. */

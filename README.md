@@ -37,11 +37,13 @@ npm test
 npm run build
 ```
 
-## Initial Tools (8)
+## Tools (10)
 
 | Tool | Category | Package |
 |------|----------|---------|
 | Loan Calculator | finance | `@toolbox/finance` |
+| Reverse Loan Calculator | finance | `@toolbox/finance` |
+| Prepayment Simulation | finance | `@toolbox/finance` |
 | EMI Calculator | finance | `@toolbox/finance` |
 | SIP Calculator | finance | `@toolbox/finance` |
 | Compound Interest | finance | `@toolbox/finance` |
@@ -65,8 +67,8 @@ See [TOOL_CREATION_GUIDE.md](./TOOL_CREATION_GUIDE.md) for the step-by-step guid
 
 **Minimal steps:**
 1. Create `packages/<category>/src/<tool-name>/` with `index.ts`, `schema.ts`, `manifest.ts`, `index.test.ts`
-2. Export from `packages/<category>/src/index.ts`
-3. Import manifest in `packages/registry/src/index.ts` and add to `ALL_TOOLS`
+2. Export the Capability object and manifest from `packages/<category>/src/index.ts`
+3. Add a `TOOL_ENTRIES` entry in `packages/registry/src/index.ts` — import the Capability object and manifest, then add `{ manifest, capability }` to the array
 4. (Optional) Add API route in `api/src/routes/<category>.ts`
 5. (Optional) Add web page in `apps/web/src/app/<category>/<tool-name>/page.tsx`
 

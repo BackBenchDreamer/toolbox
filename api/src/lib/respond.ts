@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { ApiResponse, AsyncResult, ToolError } from '@toolbox/shared';
 
 /**
