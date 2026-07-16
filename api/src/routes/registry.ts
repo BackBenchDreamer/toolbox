@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { ALL_TOOLS, getToolById, searchTools, getToolsByCategory } from '@toolbox/registry';
+import { getPublicTools, getToolById, searchTools, getToolsByCategory } from '@toolbox/registry';
 import type { Request, Response } from 'express';
 
 const router = Router();
 
-/** GET /api/registry — list all public tools */
+/** GET /api/v1/registry — list all public and beta tools */
 router.get('/', (_req: Request, res: Response) => {
-  res.json({ success: true, data: ALL_TOOLS });
+  res.json({ success: true, data: getPublicTools() });
 });
 
 /** GET /api/registry/search?q=... — search tools */

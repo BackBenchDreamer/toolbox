@@ -31,6 +31,23 @@ describe('GET /api/v1/registry', () => {
     expect(Array.isArray(res.body.data)).toBe(true);
     expect(res.body.data.length).toBeGreaterThan(0);
   });
+
+  it('never exposes hidden tools', async () => {
+    const res = await request(app).get('/api/v1/registry');
+    expect(res.status).toBe(200);
+    const tools: Array<{ visibility: string }> = res.body.data;
+    const hidden = tools.filter((t) => t.visibility === 'hidden');
+    expect(hidden).toHaveLength(0);
+  });
+
+  it('each returned tool has a public or beta visibility', async () => {
+    const res = await request(app).get('/api/v1/registry');
+    expect(res.status).toBe(200);
+    const tools: Array<{ visibility: string }> = res.body.data;
+    tools.forEach((t) => {
+      expect(['public', 'beta']).toContain(t.visibility);
+    });
+  });
 });
 
 describe('GET /api/v1/registry/search', () => {
