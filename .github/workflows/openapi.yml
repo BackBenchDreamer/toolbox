@@ -6,11 +6,17 @@ on:
     paths:
       - "api/**"
       - "packages/registry/**"
+      - "packages/finance/**/manifest.ts"
+      - "packages/utilities/**/manifest.ts"
+      - "packages/developer/**/manifest.ts"
   pull_request:
     branches: [main, develop]
     paths:
       - "api/**"
       - "packages/registry/**"
+      - "packages/finance/**/manifest.ts"
+      - "packages/utilities/**/manifest.ts"
+      - "packages/developer/**/manifest.ts"
 
 jobs:
   validate-openapi:
