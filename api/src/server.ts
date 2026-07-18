@@ -24,6 +24,8 @@ const apiLimiter = rateLimit({
 app.use('/api/v1/finance', apiLimiter);
 app.use('/api/v1/utilities', apiLimiter);
 app.use('/api/v1/developer', apiLimiter);
+// Registry search runs searchTools() on every call — apply the same limiter.
+app.use('/api/v1/registry', apiLimiter);
 
 // Health check
 app.get('/health', (_req, res) => {
