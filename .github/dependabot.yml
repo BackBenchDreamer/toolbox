@@ -22,7 +22,8 @@ updates:
           - "@vitest/*"
           - "supertest"
           - "@types/supertest"
-      # Keep Next.js and React together
+      # Keep Next.js and React together — major versions excluded until
+      # a dedicated migration is planned (Next.js 16 breaks CI).
       nextjs:
         patterns:
           - "next"
@@ -30,6 +31,9 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
+        update-types:
+          - "minor"
+          - "patch"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
