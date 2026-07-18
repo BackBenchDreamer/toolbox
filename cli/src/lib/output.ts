@@ -1,17 +1,17 @@
 import chalk from 'chalk';
 import type { ToolError } from '@toolbox/shared';
 
-/** Print a success result as aligned key/value pairs */
+/** Print a success result as aligned key/value pairs to stdout */
 export function printResult(data: Record<string, unknown>): void {
   const maxKey = Math.max(...Object.keys(data).map((k) => k.length));
   for (const [key, value] of Object.entries(data)) {
     const label = chalk.cyan(key.padEnd(maxKey));
     const formatted = formatValue(value);
-    console.warn(`  ${label}  ${chalk.white(formatted)}`);
+    console.log(`  ${label}  ${chalk.white(formatted)}`);
   }
 }
 
-/** Print a structured error */
+/** Print a structured error to stderr */
 export function printError(error: ToolError): void {
   console.error(chalk.red(`Error [${error.code}]: ${error.message}`));
   if (error.field) {

@@ -54,7 +54,7 @@ export function registerFinanceCommands(program: Command): void {
         return;
       }
 
-      console.warn(chalk.green('\nLoan Calculation Result:'));
+      console.log(chalk.green('\nLoan Calculation Result:'));
       printResult({
         EMI: result.data.emi,
         'Total Payment': result.data.totalPayment,
@@ -63,20 +63,20 @@ export function registerFinanceCommands(program: Command): void {
       });
 
       if (result.data.payoffDate) {
-        console.warn(chalk.dim(`  Payoff Date: ${result.data.payoffDate}`));
+        console.log(chalk.dim(`  Payoff Date: ${result.data.payoffDate}`));
       }
 
       if (result.data.warnings.length) {
-        console.warn(chalk.yellow('\n  Warnings:'));
+        console.log(chalk.yellow('\n  Warnings:'));
         result.data.warnings.forEach((w) =>
-          console.warn(`  ${w.severity === 'warning' ? '⚠' : 'ℹ'} ${w.message}`),
+          console.log(`  ${w.severity === 'warning' ? '⚠' : 'ℹ'} ${w.message}`),
         );
       }
 
       if (result.data.schedule) {
-        console.warn(chalk.dim('\n  Month  |  Principal  |  Interest  |  Balance'));
+        console.log(chalk.dim('\n  Month  |  Principal  |  Interest  |  Balance'));
         result.data.schedule.forEach((row) => {
-          console.warn(
+          console.log(
             `  ${String(row.month).padEnd(6)} |  ${String(row.principal).padEnd(11)} |  ${String(row.interest).padEnd(10)} |  ${row.balance}`,
           );
         });
@@ -99,7 +99,7 @@ export function registerFinanceCommands(program: Command): void {
       });
       if (!result.success) { printError(result.error); process.exit(1); }
       if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
-      console.warn(chalk.green('\nReverse Loan Result:'));
+      console.log(chalk.green('\nReverse Loan Result:'));
       printResult({
         Principal: result.data.principal,
         'Total Payment': result.data.totalPayment,
@@ -134,7 +134,7 @@ export function registerFinanceCommands(program: Command): void {
       });
       if (!result.success) { printError(result.error); process.exit(1); }
       if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
-      console.warn(chalk.green('\nPrepayment Simulation Result:'));
+      console.log(chalk.green('\nPrepayment Simulation Result:'));
       printResult({
         'Interest Saved': result.data.interestSaved,
         'Months Saved': result.data.monthsSaved,
@@ -154,7 +154,7 @@ export function registerFinanceCommands(program: Command): void {
     .action((opts) => {
       const result = calculateEMI({ principal: opts.principal, annualRatePercent: opts.rate, tenureMonths: opts.tenure });
       if (!result.success) { printError(result.error); process.exit(1); }
-      console.warn(chalk.green('\nEMI Result:'));
+      console.log(chalk.green('\nEMI Result:'));
       printResult(result.data as unknown as Record<string, unknown>);
     });
 
@@ -168,7 +168,7 @@ export function registerFinanceCommands(program: Command): void {
     .action((opts) => {
       const result = calculateSIP({ monthlyInvestment: opts.monthly, annualRatePercent: opts.rate, tenureMonths: opts.tenure });
       if (!result.success) { printError(result.error); process.exit(1); }
-      console.warn(chalk.green('\nSIP Result:'));
+      console.log(chalk.green('\nSIP Result:'));
       printResult(result.data as unknown as Record<string, unknown>);
     });
 
@@ -182,7 +182,7 @@ export function registerFinanceCommands(program: Command): void {
     .action((opts) => {
       const result = calculateGST({ amount: opts.amount, gstPercent: opts.rate, mode: opts.mode });
       if (!result.success) { printError(result.error); process.exit(1); }
-      console.warn(chalk.green('\nGST Result:'));
+      console.log(chalk.green('\nGST Result:'));
       printResult(result.data as unknown as Record<string, unknown>);
     });
 }

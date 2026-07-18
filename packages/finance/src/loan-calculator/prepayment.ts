@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { ok, err, ErrorCode, roundTo } from '@toolbox/shared';
 import { computeEMI } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { positiveNumberSchema, positiveIntegerSchema } from '@toolbox/shared';
+import manifest from './prepayment-manifest.js';
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -107,4 +108,15 @@ export function simulatePrepayment(input: PrepaymentInput): Result<PrepaymentOut
     schedule,
   });
 }
+
+/**
+ * PrepaymentSimulationCalculator — Capability implementation wrapping simulatePrepayment().
+ *
+ * Follows the same pattern as all other registered capabilities (LoanCalculator,
+ * EMICalculator, etc.). Eliminates the inline capability object in the registry.
+ */
+export const PrepaymentSimulationCalculator: Capability<PrepaymentInput, PrepaymentOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(simulatePrepayment(input)),
+};
 

@@ -5,8 +5,8 @@ import {
   SIPCalculator,
   CompoundInterestCalculator,
   GSTCalculator,
-  calculateReverseLoan,
-  simulatePrepayment,
+  ReverseLoanCalculator,
+  PrepaymentSimulationCalculator,
 } from '@toolbox/finance';
 import { asyncSendResult } from '../lib/respond.js';
 
@@ -47,12 +47,12 @@ router.post('/gst-calculator', (req, res) => {
 
 /** POST /api/v1/finance/reverse-loan */
 router.post('/reverse-loan', (req, res) => {
-  void asyncSendResult(res, Promise.resolve(calculateReverseLoan(req.body)));
+  void asyncSendResult(res, ReverseLoanCalculator.execute(req.body));
 });
 
 /** POST /api/v1/finance/prepayment-simulation */
 router.post('/prepayment-simulation', (req, res) => {
-  void asyncSendResult(res, Promise.resolve(simulatePrepayment(req.body)));
+  void asyncSendResult(res, PrepaymentSimulationCalculator.execute(req.body));
 });
 
 export { router as financeRouter };

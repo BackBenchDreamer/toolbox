@@ -60,13 +60,14 @@ export {
   SIPCalculator,
   CompoundInterestCalculator,
   GSTCalculator,
+  ReverseLoanCalculator,
+  PrepaymentSimulationCalculator,
   // Raw functions (available for direct use)
   calculateLoan,
   calculateEMI,
   calculateSIP,
   calculateCompoundInterest,
   calculateGST,
-  // New loan functions
   calculateReverseLoan,
   simulatePrepayment,
   // Export helpers
