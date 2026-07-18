@@ -5,6 +5,7 @@ import { calculateLoan, scheduleToCSV, outputToJSON } from '@toolbox/finance';
 import { formatCurrency } from '@toolbox/shared';
 import type { LoanOutput } from '@toolbox/finance';
 import { ToolLayout } from '@/components/ToolLayout';
+import { LoanChart } from '@/components/LoanChart';
 import { loanCalculatorManifest as loanManifest } from '@toolbox/finance';
 
 // ─── URL state helpers ────────────────────────────────────────────────────────
@@ -61,6 +62,7 @@ export default function LoanCalculatorPage() {
       tenureMonths: Number(state.tenureMonths),
       includeSchedule: true,
       includeYearlySummary: true,
+      includeChartData: true,
       startDate: state.startDate || undefined,
     });
     if (r.success) setResult(r.data);
@@ -134,6 +136,11 @@ export default function LoanCalculatorPage() {
               <ResultRow label="Payoff Date" value={result.payoffDate} />
             )}
           </div>
+
+          {/* ── Chart ── */}
+          {result.chartData && (
+            <LoanChart data={result.chartData} />
+          )}
 
           {/* ── Warnings ── */}
           {result.warnings.length > 0 && (

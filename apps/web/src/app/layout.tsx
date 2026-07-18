@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getActiveCategories } from '@toolbox/registry';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -62,18 +63,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header style={{ borderBottom: '1px solid var(--border)', padding: '0.75rem 0', marginBottom: '2rem' }}>
           <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <a href="/" style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', letterSpacing: '-0.02em' }}>
+            <Link href="/" style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', letterSpacing: '-0.02em', textDecoration: 'none' }}>
               ◈ Toolbox
-            </a>
+            </Link>
             <nav style={{ marginLeft: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
               {categories.map((cat) => (
-                <a
+                <Link
                   key={cat}
                   href={`/${cat}`}
-                  style={{ color: 'var(--muted)', fontSize: '0.9rem', textTransform: 'capitalize' }}
+                  style={{ color: 'var(--muted)', fontSize: '0.9rem', textTransform: 'capitalize', textDecoration: 'none' }}
                 >
                   {cat}
-                </a>
+                </Link>
               ))}
               <ThemeToggle />
             </nav>

@@ -17,7 +17,7 @@ const manifest: ToolManifest = {
   visibility: 'public',
   featured: false,
   experimental: false,
-  interfaces: { api: true, cli: true, web: false, mcp: false, npm: true },
+  interfaces: { api: true, cli: true, web: true, mcp: false, npm: true },
   complexity: 'O(n)',
   requiresAuth: false,
   relatedTools: ['loan-calculator', 'reverse-loan'],
