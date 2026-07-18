@@ -56,6 +56,26 @@ async function loadFixtures() {
       input: { principal: 500000, annualRatePercent: 8.5, tenureMonths: 240 },
     },
     {
+      id: 'reverse-loan',
+      name: 'Reverse Loan Calculator',
+      capability: finance.ReverseLoanCalculator,
+      input: { emi: 4340, annualRatePercent: 8.5, tenureMonths: 240 },
+    },
+    {
+      id: 'prepayment-simulation',
+      name: 'Prepayment Simulation',
+      capability: finance.PrepaymentSimulationCalculator,
+      input: {
+        principal: 500000,
+        annualRatePercent: 8.5,
+        tenureMonths: 240,
+        prepayments: [
+          { month: 12, amount: 50000 },
+          { month: 24, amount: 50000 },
+        ],
+      },
+    },
+    {
       id: 'emi-calculator',
       name: 'EMI Calculator',
       capability: finance.EMICalculator,

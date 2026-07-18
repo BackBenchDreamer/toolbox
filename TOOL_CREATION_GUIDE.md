@@ -21,9 +21,10 @@ packages/<category>/src/<tool-slug>/
 
 ```ts
 import { ok, err, ErrorCode } from '@toolbox/shared';
-import type { Result } from '@toolbox/shared';
+import type { Result, Capability } from '@toolbox/shared';
 import { MyInputSchema } from './schema.js';
 import type { MyInput, MyOutput } from './schema.js';
+import manifest from './manifest.js';
 export type { MyInput, MyOutput } from './schema.js';
 
 export function myTool(input: MyInput): Result<MyOutput> {
@@ -34,6 +35,11 @@ export function myTool(input: MyInput): Result<MyOutput> {
   // pure calculation — no side effects, no UI framework imports
   return ok({ /* result fields */ });
 }
+
+export const MyToolCapability: Capability<MyInput, MyOutput> = {
+  manifest,
+  execute: (input) => Promise.resolve(myTool(input)),
+};
 ```
 
 ### `manifest.ts` pattern
@@ -52,7 +58,7 @@ const manifest: ToolManifest = {
   version: '0.1.0',
   packageName: '@toolbox/<category>',
   route: '/<category>/my-tool',
-  apiEndpoint: '/api/<category>/my-tool',
+  apiEndpoint: '/api/v1/<category>/my-tool',
   visibility: 'public',           // public | hidden | beta | deprecated
   featured: false,
   inputs: [
@@ -79,24 +85,27 @@ In `packages/<category>/src/index.ts`, add:
 ```ts
 export * from './<tool-slug>/index.js';
 export { default as myToolManifest } from './<tool-slug>/manifest.js';
+// Export the Capability object so the registry and SDK can import it by name
+export { MyToolCapability } from './<tool-slug>/index.js';
 ```
 
 ---
 
 ## 3. Register in the Registry
 
-In `packages/registry/src/index.ts`:
+In `packages/registry/src/index.ts`, add ONE entry to `TOOL_ENTRIES`:
 
 ```ts
-import { myToolManifest } from '@toolbox/<category>';
+import { myToolManifest, MyToolCapability } from '@toolbox/<category>';
 
-const ALL_TOOLS: readonly ToolManifest[] = [
-  // ... existing tools ...
-  myToolManifest,   // ← add here
+const TOOL_ENTRIES = [
+  // ... existing entries ...
+  { manifest: myToolManifest, capability: MyToolCapability as Capability },
 ];
 ```
 
-That's it. Homepage, search, and sitemap update automatically.
+`ALL_TOOLS` and `CAPABILITIES` are derived from `TOOL_ENTRIES` automatically.
+Homepage, search, sitemap, and `registry.execute()` all update without further changes.
 
 ---
 
@@ -105,10 +114,10 @@ That's it. Homepage, search, and sitemap update automatically.
 In `api/src/routes/<category>.ts`:
 
 ```ts
-import { myTool } from '@toolbox/<category>';
+import { MyToolCapability } from '@toolbox/<category>';
 
 router.post('/my-tool', (req, res) => {
-  sendResult(res, myTool(req.body));
+  void asyncSendResult(res, MyToolCapability.execute(req.body));
 });
 ```
 
@@ -150,11 +159,12 @@ export default function MyToolPage() {
 
 ## Checklist
 
-- [ ] `index.ts` — pure calculation function, returns `Result<T>`
+- [ ] `index.ts` — pure calculation function returns `Result<T>`, Capability object exported
 - [ ] `schema.ts` — Zod schemas, exported TypeScript types
 - [ ] `manifest.ts` — complete `ToolManifest` with inputs/outputs/examples
 - [ ] `index.test.ts` — happy path + edge cases + invalid input tests
-- [ ] Exported from package `index.ts`
-- [ ] Manifest added to `packages/registry/src/index.ts` `ALL_TOOLS`
-- [ ] (Optional) API route added
+- [ ] Capability object and manifest exported from package `index.ts`
+- [ ] Entry added to `TOOL_ENTRIES` in `packages/registry/src/index.ts`
+- [ ] Capability added to `packages/sdk/src/index.ts` exports
+- [ ] (Optional) API route uses `Capability.execute()` via `asyncSendResult`
 - [ ] (Optional) Web page added

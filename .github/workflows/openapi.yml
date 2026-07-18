@@ -2,15 +2,21 @@ name: OpenAPI Validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "api/**"
       - "packages/registry/**"
+      - "packages/finance/**/manifest.ts"
+      - "packages/utilities/**/manifest.ts"
+      - "packages/developer/**/manifest.ts"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "api/**"
       - "packages/registry/**"
+      - "packages/finance/**/manifest.ts"
+      - "packages/utilities/**/manifest.ts"
+      - "packages/developer/**/manifest.ts"
 
 jobs:
   validate-openapi:
@@ -22,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.4.0
         with:
           node-version: "22"
           cache: "npm"

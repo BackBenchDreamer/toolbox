@@ -57,7 +57,7 @@ export default function CompoundInterestPage() {
       </form>
 
       {result && (
-        <div className="result-box" role="region" aria-label="Compound interest results">
+        <div className="result-box" role="region" aria-live="polite" aria-label="Compound interest results">
           {([
             ['Future Value', formatCurrency(result.futureValue)],
             ['Total Interest', formatCurrency(result.totalInterest)],

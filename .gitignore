@@ -44,3 +44,8 @@ tmp/
 # ─── Benchmarks ─────────────────────────────────────────────────────────────
 # Dated result files are ephemeral; only latest.json is tracked for CI diffing
 benchmarks/results/
+.vercel
+
+# ─── Planning docs ──────────────────────────────────────────────────────────
+toolbox-phase2-plan.md
+toolbox-phase2-refined-plan.md

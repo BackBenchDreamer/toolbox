@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { ALL_TOOLS, searchTools } from '@toolbox/registry';
+import { getPublicTools, searchTools } from '@toolbox/registry';
 import type { ToolManifest } from '@toolbox/registry';
 import { registerFinanceCommands } from './commands/finance.js';
 import { registerUtilCommands } from './commands/utils.js';
@@ -18,8 +18,10 @@ program
   .description('List all available tools')
   .option('-c, --category <cat>', 'Filter by category')
   .action((opts) => {
-    const tools = opts.category ? ALL_TOOLS.filter((t) => t.category === opts.category) : ALL_TOOLS;
-    console.warn(chalk.bold('\nAvailable Tools:\n'));
+    const tools = opts.category
+      ? getPublicTools().filter((t) => t.category === opts.category)
+      : getPublicTools();
+    console.log(chalk.bold('\nAvailable Tools:\n'));
     const byCategory = new Map<string, ToolManifest[]>();
     for (const t of tools) {
       const list: ToolManifest[] = byCategory.get(t.category) ?? [];
@@ -27,11 +29,11 @@ program
       byCategory.set(t.category, list);
     }
     for (const [cat, items] of byCategory) {
-      console.warn(chalk.yellow(`  ${cat.toUpperCase()}`));
+      console.log(chalk.yellow(`  ${cat.toUpperCase()}`));
       items.forEach((t) => {
-        console.warn(`    ${chalk.cyan(t.id.padEnd(28))} ${t.description}`);
+        console.log(`    ${chalk.cyan(t.id.padEnd(28))} ${t.description}`);
       });
-      console.warn();
+      console.log();
     }
   });
 
@@ -42,10 +44,10 @@ program
   .action((query: string) => {
     const results = searchTools(query);
     if (results.length === 0) {
-      console.warn(chalk.dim(`No tools found for: "${query}"`));
+      console.log(chalk.dim(`No tools found for: "${query}"`));
     } else {
-      console.warn(chalk.bold(`\nSearch results for "${query}":`));
-      results.forEach((t) => console.warn(`  ${chalk.cyan(t.id.padEnd(28))} ${t.description}`));
+      console.log(chalk.bold(`\nSearch results for "${query}":`));
+      results.forEach((t) => console.log(`  ${chalk.cyan(t.id.padEnd(28))} ${t.description}`));
     }
   });
 

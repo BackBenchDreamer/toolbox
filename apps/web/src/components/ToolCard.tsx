@@ -19,7 +19,6 @@ export function ToolCard({ tool }: ToolCardProps) {
         textDecoration: 'none',
         color: 'var(--text)',
       }}
-      aria-label={`Open ${tool.name}`}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
         <span aria-hidden="true" style={{ fontSize: '1rem', color: 'var(--accent)' }}>◈</span>

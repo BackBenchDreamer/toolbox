@@ -1,0 +1,120 @@
+{
+  "generated": "2026-07-17T21:20:20.318Z",
+  "runs": 200,
+  "warmup": 20,
+  "nodeVersion": "v24.14.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "results": [
+    {
+      "id": "loan-calculator",
+      "name": "Loan Calculator",
+      "median_ms": 0.005459,
+      "p95_ms": 0.018167,
+      "min_ms": 0.003083,
+      "max_ms": 0.267208,
+      "mean_ms": 0.008451,
+      "ops_per_sec": 118331,
+      "avg_heap_bytes": 25074
+    },
+    {
+      "id": "reverse-loan",
+      "name": "Reverse Loan Calculator",
+      "median_ms": 0.002083,
+      "p95_ms": 0.007459,
+      "min_ms": 0.001125,
+      "max_ms": 0.317416,
+      "mean_ms": 0.004926,
+      "ops_per_sec": 202991,
+      "avg_heap_bytes": 11311
+    },
+    {
+      "id": "prepayment-simulation",
+      "name": "Prepayment Simulation",
+      "median_ms": 0.021417,
+      "p95_ms": 0.043,
+      "min_ms": 0.0195,
+      "max_ms": 0.157209,
+      "mean_ms": 0.025566,
+      "ops_per_sec": 39115,
+      "avg_heap_bytes": 46597
+    },
+    {
+      "id": "emi-calculator",
+      "name": "EMI Calculator",
+      "median_ms": 0.001459,
+      "p95_ms": 0.001875,
+      "min_ms": 0.001291,
+      "max_ms": 0.011375,
+      "mean_ms": 0.001618,
+      "ops_per_sec": 618221,
+      "avg_heap_bytes": 5870
+    },
+    {
+      "id": "sip-calculator",
+      "name": "SIP Calculator",
+      "median_ms": 0.001792,
+      "p95_ms": 0.00225,
+      "min_ms": 0.001291,
+      "max_ms": 0.62775,
+      "mean_ms": 0.005282,
+      "ops_per_sec": 189320,
+      "avg_heap_bytes": 5379
+    },
+    {
+      "id": "compound-interest",
+      "name": "Compound Interest",
+      "median_ms": 0.002958,
+      "p95_ms": 0.003584,
+      "min_ms": 0.002041,
+      "max_ms": 0.0195,
+      "mean_ms": 0.003094,
+      "ops_per_sec": 323189,
+      "avg_heap_bytes": 10351
+    },
+    {
+      "id": "gst-calculator",
+      "name": "GST Calculator",
+      "median_ms": 0.001541,
+      "p95_ms": 0.001917,
+      "min_ms": 0.001416,
+      "max_ms": 0.141292,
+      "mean_ms": 0.002337,
+      "ops_per_sec": 427851,
+      "avg_heap_bytes": 7742
+    },
+    {
+      "id": "unit-converter",
+      "name": "Unit Converter (km→mi)",
+      "median_ms": 0.003125,
+      "p95_ms": 0.005958,
+      "min_ms": 0.002875,
+      "max_ms": 0.255291,
+      "mean_ms": 0.004902,
+      "ops_per_sec": 204012,
+      "avg_heap_bytes": 8177
+    },
+    {
+      "id": "password-generator",
+      "name": "Password Generator",
+      "median_ms": 0.00725,
+      "p95_ms": 0.020667,
+      "min_ms": 0.006458,
+      "max_ms": 0.311583,
+      "mean_ms": 0.012153,
+      "ops_per_sec": 82282,
+      "avg_heap_bytes": 15155
+    },
+    {
+      "id": "uuid-generator",
+      "name": "UUID Generator (×10)",
+      "median_ms": 0.004083,
+      "p95_ms": 0.009625,
+      "min_ms": 0.003583,
+      "max_ms": 0.190834,
+      "mean_ms": 0.006183,
+      "ops_per_sec": 161725,
+      "avg_heap_bytes": 20199
+    }
+  ]
+}
