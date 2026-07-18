@@ -2,12 +2,12 @@ name: Benchmark
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "packages/**"
       - "scripts/benchmark.mjs"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
     paths:
       - "packages/**"
       - "scripts/benchmark.mjs"
@@ -79,15 +79,22 @@ jobs:
           const base = JSON.parse(readFileSync('baseline/latest.json', 'utf8'));
           const curr = JSON.parse(readFileSync('benchmarks/latest.json', 'utf8'));
           const fmt = (ms) => ms < 0.01 ? `${(ms*1000).toFixed(1)} µs` : `${ms.toFixed(3)} ms`;
+          const REGRESSION_THRESHOLD = 15; // fail CI if any tool degrades >15%
+          let hasRegression = false;
           for (const cr of curr.results) {
             const br = base.results.find(r => r.id === cr.id);
             if (!br) continue;
             const delta = ((cr.median_ms - br.median_ms) / br.median_ms * 100).toFixed(1);
-            const flag = Math.abs(parseFloat(delta)) > 20 ? ' ⚠' : '';
+            const pct = Math.abs(parseFloat(delta));
+            const flag = pct > REGRESSION_THRESHOLD ? ' ⚠ REGRESSION' : pct > 5 ? ' ⚠' : '';
+            if (pct > REGRESSION_THRESHOLD && parseFloat(delta) > 0) hasRegression = true;
             console.log(`| ${cr.name} | ${fmt(br.median_ms)} | ${fmt(cr.median_ms)} | ${delta}%${flag} |`);
+          }
+          if (hasRegression) {
+            console.error(`\n❌ Performance regression detected (threshold: ${REGRESSION_THRESHOLD}%). Check the benchmark table above.`);
+            process.exit(1);
           }
           EOF
           else
             echo "No baseline found — first run on main."
           fi
-        continue-on-error: true

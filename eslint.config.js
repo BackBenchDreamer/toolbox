@@ -7,6 +7,7 @@ const config = [
   {
     ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/.next/**', '**/coverage/**'],
   },
+  // Base rules for all TypeScript files
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -25,7 +26,15 @@ const config = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': 'error',
+      // Disallow console.log everywhere except explicitly allowed contexts below.
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+    },
+  },
+  // CLI override: console.log is intentional terminal output, not debugging noise.
+  {
+    files: ['cli/src/**/*.ts'],
+    rules: {
+      'no-console': ['warn', { allow: ['log', 'warn', 'error'] }],
     },
   },
 ];
