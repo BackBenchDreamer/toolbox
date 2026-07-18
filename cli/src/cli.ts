@@ -1,16 +1,21 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { createRequire } from 'module';
 import { getPublicTools, searchTools } from '@toolbox/registry';
 import type { ToolManifest } from '@toolbox/registry';
 import { registerFinanceCommands } from './commands/finance.js';
 import { registerUtilCommands } from './commands/utils.js';
+
+// Read version from package.json so it never drifts from the published package.
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json') as { version: string };
 
 const program = new Command();
 
 program
   .name('toolbox')
   .description('Toolbox — utilities, calculators, converters in your terminal')
-  .version('0.1.0');
+  .version(version);
 
 // toolbox list
 program
