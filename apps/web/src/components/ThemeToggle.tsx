@@ -30,13 +30,14 @@ export function ThemeToggle() {
   }, []);
 
   function cycle() {
-    const next: Theme = theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
+    const next: Theme = theme === 'system' ? 'dark' : theme === 'dark' ? 'light' : 'system';
     setTheme(next);
     localStorage.setItem('theme', next);
     applyTheme(next);
   }
 
-  const label = theme === 'system' ? '☀ Light' : theme === 'light' ? '☾ Dark' : '◑ System';
+  // Label shows the CURRENT active theme so the user knows what mode they're in.
+  const label = theme === 'dark' ? '☾ Dark' : theme === 'light' ? '☀ Light' : '◑ System';
 
   return (
     <button
