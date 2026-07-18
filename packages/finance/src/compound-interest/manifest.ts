@@ -15,7 +15,7 @@ const manifest: ToolManifest = {
   visibility: 'public',
   featured: false,
   experimental: false,
-  interfaces: { api: true, cli: false, web: true, mcp: false, npm: true },
+  interfaces: { api: true, cli: true, web: true, mcp: false, npm: true },
   complexity: 'O(1)',
   requiresAuth: false,
   relatedTools: ['sip-calculator', 'loan-calculator'],

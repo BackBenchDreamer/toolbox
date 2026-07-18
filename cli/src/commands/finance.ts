@@ -5,6 +5,7 @@ import {
   calculateEMI,
   calculateSIP,
   calculateGST,
+  calculateCompoundInterest,
   calculateReverseLoan,
   simulatePrepayment,
   scheduleToCSV,
@@ -151,11 +152,17 @@ export function registerFinanceCommands(program: Command): void {
     .requiredOption('-p, --principal <amount>', 'Principal', parseFloat)
     .requiredOption('-r, --rate <percent>', 'Annual rate (%)', parseFloat)
     .requiredOption('-t, --tenure <months>', 'Tenure in months', parseInt)
+    .option('--json', 'Output result as JSON')
     .action((opts) => {
       const result = calculateEMI({ principal: opts.principal, annualRatePercent: opts.rate, tenureMonths: opts.tenure });
       if (!result.success) { printError(result.error); process.exit(1); }
+      if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
       console.log(chalk.green('\nEMI Result:'));
-      printResult(result.data as unknown as Record<string, unknown>);
+      printResult({
+        'Monthly EMI': result.data.emi,
+        'Total Amount': result.data.totalAmount,
+        'Total Interest': result.data.totalInterest,
+      });
     });
 
   // toolbox finance sip --monthly 10000 --rate 12 --tenure 120
@@ -165,11 +172,18 @@ export function registerFinanceCommands(program: Command): void {
     .requiredOption('-m, --monthly <amount>', 'Monthly investment', parseFloat)
     .requiredOption('-r, --rate <percent>', 'Expected annual return (%)', parseFloat)
     .requiredOption('-t, --tenure <months>', 'Investment tenure in months', parseInt)
+    .option('--json', 'Output result as JSON')
     .action((opts) => {
       const result = calculateSIP({ monthlyInvestment: opts.monthly, annualRatePercent: opts.rate, tenureMonths: opts.tenure });
       if (!result.success) { printError(result.error); process.exit(1); }
+      if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
       console.log(chalk.green('\nSIP Result:'));
-      printResult(result.data as unknown as Record<string, unknown>);
+      printResult({
+        'Future Value': result.data.futureValue,
+        'Total Invested': result.data.totalInvested,
+        'Estimated Returns': result.data.estimatedReturns,
+        'Wealth Ratio': result.data.wealthRatio,
+      });
     });
 
   // toolbox finance gst --amount 10000 --rate 18 --mode exclusive
@@ -179,10 +193,44 @@ export function registerFinanceCommands(program: Command): void {
     .requiredOption('-a, --amount <amount>', 'Amount', parseFloat)
     .requiredOption('-r, --rate <percent>', 'GST rate (%)', parseFloat)
     .option('-m, --mode <mode>', 'exclusive or inclusive', 'exclusive')
+    .option('--json', 'Output result as JSON')
     .action((opts) => {
       const result = calculateGST({ amount: opts.amount, gstPercent: opts.rate, mode: opts.mode });
       if (!result.success) { printError(result.error); process.exit(1); }
+      if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
       console.log(chalk.green('\nGST Result:'));
-      printResult(result.data as unknown as Record<string, unknown>);
+      printResult({
+        'Base Amount': result.data.baseAmount,
+        'GST Amount': result.data.gstAmount,
+        'Total Amount': result.data.totalAmount,
+        'CGST': result.data.cgst,
+        'SGST': result.data.sgst,
+      });
+    });
+
+  // toolbox finance compound --principal 100000 --rate 8 --years 5 [--compoundings 12]
+  finance
+    .command('compound')
+    .description('Compound interest calculator')
+    .requiredOption('-p, --principal <amount>', 'Principal amount', parseFloat)
+    .requiredOption('-r, --rate <percent>', 'Annual interest rate (%)', parseFloat)
+    .requiredOption('-y, --years <years>', 'Investment period in years', parseInt)
+    .option('-n, --compoundings <n>', 'Compoundings per year (default 12 = monthly)', parseInt, 12)
+    .option('--json', 'Output result as JSON')
+    .action((opts) => {
+      const result = calculateCompoundInterest({
+        principal: opts.principal,
+        annualRatePercent: opts.rate,
+        years: opts.years,
+        compoundingsPerYear: opts.compoundings,
+      });
+      if (!result.success) { printError(result.error); process.exit(1); }
+      if (opts.json) { process.stdout.write(JSON.stringify(result.data, null, 2) + '\n'); return; }
+      console.log(chalk.green('\nCompound Interest Result:'));
+      printResult({
+        'Future Value': result.data.futureValue,
+        'Total Interest': result.data.totalInterest,
+        'Effective Annual Rate': `${result.data.effectiveAnnualRate.toFixed(4)}%`,
+      });
     });
 }

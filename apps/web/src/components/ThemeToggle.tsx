@@ -36,7 +36,7 @@ export function ThemeToggle() {
     applyTheme(next);
   }
 
-  const label = theme === 'dark' ? '☀ Light' : theme === 'light' ? '◑ System' : '☾ Dark';
+  const label = theme === 'system' ? '☀ Light' : theme === 'light' ? '☾ Dark' : '◑ System';
 
   return (
     <button
