@@ -7,6 +7,11 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      # Zod 4 is a full API rewrite — all schemas must be migrated first.
+      # Re-enable when a dedicated zod-4-migration branch is ready.
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
     groups:
       # Keep TypeScript toolchain updates together
       typescript-toolchain:
