@@ -61,13 +61,18 @@ function generateV7(): string {
   bytes[4] = Number((ms >> 8n) & 0xffn);
   bytes[5] = Number(ms & 0xffn);
 
-  // Bits 48-51 = version 7; bits 52-63 = random
+  // Random bits layout (10 bytes = rand[0..9]):
+  //   rand[0] → bytes[6] bits 0-3 (version nibble, upper 4 bits forced to 0x7_)
+  //   rand[1] → bytes[7] (random)
+  //   rand[2] → bytes[8] bits 0-5 (variant nibble, upper 2 bits forced to 0b10_)
+  //   rand[3..9] → bytes[9..15] (7 fully random bytes)
+  // All 10 allocated bytes are consumed exactly once.
   const rand = new Uint8Array(10);
   globalThis.crypto.getRandomValues(rand);
-  bytes[6] = ((rand[0]! & 0x0f) | 0x70); // version 7
+  bytes[6] = (rand[0]! & 0x0f) | 0x70; // version 7
   bytes[7] = rand[1]!;
-  bytes[8] = ((rand[2]! & 0x3f) | 0x80); // variant
-  for (let i = 9; i < 16; i++) bytes[i] = rand[i - 7]!;
+  bytes[8] = (rand[2]! & 0x3f) | 0x80; // variant 10xx
+  for (let i = 9; i < 16; i++) bytes[i] = rand[i - 6]!; // rand[3]..rand[9]
 
   return bytesToUUID(bytes);
 }

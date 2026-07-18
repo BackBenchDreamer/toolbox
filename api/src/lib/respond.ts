@@ -40,17 +40,3 @@ export async function asyncSendResult<T>(res: Response, promise: AsyncResult<T>)
     res.status(500).json(response);
   }
 }
-
-/** Parse JSON body with a Zod schema and send 400 on failure */
-export function parseBody<T>(req: Request, res: Response, parse: (body: unknown) => { success: true; data: T } | { success: false; error: string }): T | null {
-  const result = parse(req.body);
-  if (!result.success) {
-    const response: ApiResponse<never> = {
-      success: false,
-      error: { code: 'VALIDATION_ERROR', message: result.error },
-    };
-    res.status(400).json(response);
-    return null;
-  }
-  return result.data;
-}

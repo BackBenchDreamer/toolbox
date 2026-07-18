@@ -58,7 +58,7 @@ const manifest: ToolManifest = {
   version: '0.1.0',
   packageName: '@toolbox/<category>',
   route: '/<category>/my-tool',
-  apiEndpoint: '/api/<category>/my-tool',
+  apiEndpoint: '/api/v1/<category>/my-tool',
   visibility: 'public',           // public | hidden | beta | deprecated
   featured: false,
   inputs: [
