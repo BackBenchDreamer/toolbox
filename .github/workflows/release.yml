@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: Create Release PR
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           # Creates a "Version Packages" PR when changesets are present.
           # Publish is intentionally omitted here — add NPM_TOKEN secret and
